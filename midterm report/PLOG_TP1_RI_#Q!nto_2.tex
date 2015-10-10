@@ -98,6 +98,7 @@ Cada jogador possui 5 cartas sendo que existem 5 formas e 5 cores possíveis. Ex
 	\item Carta universal: forma e cor definível. 
 \end{enumerate}
 
+\par
 Uma jogada é válida se for feita uma coluna ou linha com cartas nas seguintes condições:
 
 \begin{enumerate}
@@ -108,11 +109,12 @@ Uma jogada é válida se for feita uma coluna ou linha com cartas nas seguintes 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=85mm]{especiais.jpg}
+\includegraphics[width=65mm]{especiais.jpg}
 \caption{Carta que permite escolher a cor, forma e universal. (1,2 e 3 respetivamente). \label{especiais}}
 \end{figure}
 
-A pontuação é calculada com base no número de cartas por linha e coluna englobada na jogada. A cada carta é dada a pontuação de uma unidade. A mesma carta pode ser contabilizada duas vezes visto que os pontos são cotados horizontal e verticalmente. Quando se obtêm linhas com 5 elementos o jogador recebe uma pontuação extra de 5 pontos. Esta jogada é apelidada de Q!nto.
+\par
+A pontuação é calculada com base no número de cartas por linha e coluna englobada na jogada. A cada carta é dada a pontuação de uma unidade. A mesma carta pode ser contabilizada duas vezes visto que os pontos são cotados horizontal e verticalmente. Quando se obtêm linhas com 5 elementos o jogador recebe uma pontuação extra de 5 pontos. Esta jogada é apelidada de Q!nto. Também se obtém 5 pontos extra quando são jogadas todas as cartas na mão e quando é a última jogada. O jogo acaba quando não existem mais cartas a serem jogadas e não existem cartas na pilha. Ganha o jogador com mais pontos.
 
 \begin{figure}[h]
 \centering
@@ -126,23 +128,36 @@ A pontuação é calculada com base no número de cartas por linha e coluna engl
 \caption{Contagem dos pontos (exemplo 2). \label{points2}}
 \end{figure}
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=80mm]{quinto.jpg}
+\caption{Jogada Q!into. \label{quinto}}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Representação do Estado do Jogo}
 
-O tabuleiro inicial corresponde a uma grelha de 60x60 visto que existem 60 cartas no total. Não existem posições iniciais pois trata-se de um jogo de cartas. Por baixo do tabuleiro é representada a mão do jogador. 
+O menu inicial permitirá a escolha entre as seguintes possibilidades:
+
+\begin{enumerate}
+	\item Jogador vs Computador;
+	\item Computador vs Computador;
+	\item Sair do Jogo. 
+\end{enumerate}
+
+\par
+O tabuleiro inicial corresponde a uma grelha de 5x5. À medida que o jogo evolui, o tabuleiro é aumentado 5 casas horizontal e verticalmente. Não existem posições iniciais pois trata-se de um jogo de cartas. Por baixo do tabuleiro é representada a mão do jogador. No estado inicial, é visível apenas o tabuleiro e a mão do jogador que é atribuida de forma aleatória (5 cartas). A cada jogada é atualizado o tabuleiro posicionando as cartas jogadas e são dadas cartas a quem as gastou de modo a perfazer 5. O estado de vitória ou derrota corresponde ao final do jogo e é identificada através de uma mensagem no ecrã.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Visualização do Tabuleiro}
 
-A representação do tabuleiro será feita de forma textual parecendo-se com o seguinte: \linebreak ---- ---- ---- \linebreak
-| r* |    |    | \linebreak
-|----|----|----| \linebreak
-|    |    |    | \linebreak
-|----|----|----| \linebreak
-|    |    |    | \linebreak
- ---- ---- ----  \linebreak
-\linebreak
+A representação do tabuleiro será feita de forma textual através de barras e \textit{underscores}.
 
+\begin{figure}[h!]
+\centering
+\includegraphics[width=50mm]{board.jpg}
+\caption{Tabuleiro exemplo visualizado no SICStus de 6x6. \label{board}}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Movimentos}

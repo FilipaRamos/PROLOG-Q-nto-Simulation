@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.8)  10 OCT 2015 19:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.8)  10 OCT 2015 20:03
 entering extended mode
 **"C:/Users/utilizador/Documents/Universidade/PLOG/Projeto/PROLOG-Q-nto-Simulat
 ion/midterm report/PLOG_TP1_RI_#Q!nto_2.tex"
@@ -350,86 +350,50 @@ Package pdftex.def Info: q!ntologo.jpg used on input line 83.
  [2 <./q!ntologo.jpg>] <especiais.jpg, id=15, 350.5095pt x 113.223pt>
 File: especiais.jpg Graphic file (type jpg)
  <use especiais.jpg>
-Package pdftex.def Info: especiais.jpg used on input line 111.
-(pdftex.def)             Requested size: 241.84842pt x 78.12395pt.
+Package pdftex.def Info: especiais.jpg used on input line 112.
+(pdftex.def)             Requested size: 184.9429pt x 59.74184pt.
 
 <points.jpg, id=16, 1156.32pt x 650.43pt>
 File: points.jpg Graphic file (type jpg)
  <use points.jpg>
-Package pdftex.def Info: points.jpg used on input line 119.
+Package pdftex.def Info: points.jpg used on input line 121.
 (pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
 
 <points2.jpg, id=17, 1156.32pt x 650.43pt>
 File: points2.jpg Graphic file (type jpg)
  <use points2.jpg>
-Package pdftex.def Info: points2.jpg used on input line 125.
+Package pdftex.def Info: points2.jpg used on input line 127.
 (pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
- [3 <./especiais.jpg> <./points.jpg> <./points2.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 se-guinte:
- []
 
+<quinto.jpg, id=18, 1156.32pt x 650.43pt>
+File: quinto.jpg Graphic file (type jpg)
+ <use quinto.jpg>
+Package pdftex.def Info: quinto.jpg used on input line 133.
+(pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
+ [3 <./especiais.jpg> <./points.jpg> <./points2.jpg>] <board.jpg, id=22, 200.24
+812pt x 128.73094pt>
+File: board.jpg Graphic file (type jpg)
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 ---- ---- ----
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 | r* | | |
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 |----|----|----|
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 | | | |
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 |----|----|----|
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 | | | |
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-\OT1/cmr/m/n/10 ---- ---- ----
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 137--145
-
- []
-
-[4] (PLOG_TP1_RI_#Q!nto_2.aux) ) 
+<use board.jpg>
+Package pdftex.def Info: board.jpg used on input line 158.
+(pdftex.def)             Requested size: 142.26378pt x 91.46048pt.
+ [4 <./quinto.jpg> <./board.jpg>] (PLOG_TP1_RI_#Q!nto_2.aux) ) 
 Here is how much of TeX's memory you used:
- 1838 strings out of 493698
- 23565 string characters out of 3144397
- 84803 words of memory out of 3000000
- 5164 multiletter control sequences out of 15000+200000
- 8193 words of font info for 29 fonts, out of 3000000 for 9000
+ 1853 strings out of 493698
+ 23742 string characters out of 3144397
+ 84819 words of memory out of 3000000
+ 5176 multiletter control sequences out of 15000+200000
+ 8539 words of font info for 30 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 27i,7n,23p,706b,234s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfont
-s/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr1
-2.pfb>
-Output written on PLOG_TP1_RI_#Q!nto_2.pdf (4 pages, 439442 bytes).
+ 27i,7n,23p,766b,234s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
+blic/amsfonts/cm/cmti10.pfb>
+Output written on PLOG_TP1_RI_#Q!nto_2.pdf (4 pages, 577878 bytes).
 PDF statistics:
- 34 PDF objects out of 1000 (max. 8388607)
+ 41 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
