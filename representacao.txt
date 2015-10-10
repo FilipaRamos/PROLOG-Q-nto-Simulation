@@ -1,0 +1,23 @@
+
+ ---- ---- ---- 
+| r* |    |    |
+|----|----|----|
+|    |    |    |
+|----|----|----|
+|    |    |    |
+ ---- ---- ---- 
+
+6*6
+1º lista -> espaço + _ (60) + espaço
+Lista vertical -> | (60+1)
+Lista horizontal -> _ (60)
+
+
+
+Cor -> 6 mas uma é default logo sao 5 
+	   B(blue) R(red) Y(yellow) G(green)
+
+Formas -> 6 formas possiveis 
+		*(espadas) !(!) #(ouros) +(copas) &(paus)
+
+
