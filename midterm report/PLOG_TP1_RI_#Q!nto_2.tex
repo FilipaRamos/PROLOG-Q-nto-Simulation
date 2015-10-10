@@ -23,9 +23,9 @@
 \Large{Programação em Lógica}\linebreak
 }
 
-\author{\textbf{Grupo xx:}\\
+\author{\textbf{Grupo 2:}\\
 Filipa Marilia Monteiro Ramos - up201305378 \\
-Inês Alexandra dos Santos Carneiro - up201303 \\
+Inês Alexandra dos Santos Carneiro - up201303501 \\
 \linebreak\linebreak \\
  \\ Faculdade de Engenharia da Universidade do Porto \\ Rua Roberto Frias, s\/n, 4200-465 Porto, Portugal \linebreak\linebreak\linebreak
 \linebreak\linebreak\vspace{1cm}}
@@ -78,6 +78,12 @@ Inês Alexandra dos Santos Carneiro - up201303 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{O Jogo Q!nto}
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=90mm]{q!ntologo.jpg}
+\caption{Caixa e cartas do jog. \label{q!nto}}
+\end{figure}
+
 \subsection{História}
 
 Q!nto é um jogo de estratégia abstrata que foi desenvolvido pelo designer Gene Mackles e publicado pela PDG games. O seu lançamento no mercado data do ano 2014. É adequado para todas as idades a partir dos 8 anos podendo ser jogado por um mínimo de 2 e um máximo de 4 jogadores. Existem 3 variações de Q!nto: Q!nto clássico que será o desenvolvido pelo grupo; Q!nto Plus que permite a contagem de pontos numa diagonal de 3 ou mais cartas e Q!nto Light no qual as cartas são divididas igualmente pelos jogadores e o vencedor é o que esvazia a sua mão primeiro. 
@@ -92,6 +98,50 @@ Cada jogador possui 5 cartas sendo que existem 5 formas e 5 cores possíveis. Ex
 	\item Carta universal: forma e cor definível. 
 \end{enumerate}
 
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{corEscolhivel.jpg}
+  \caption{A subfigure}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{formaEscolhivel.jpg}
+  \caption{A subfigure}
+  \label{fig:sub2}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{todas.jpg}
+  \caption{A subfigure}
+  \label{fig:sub3}
+\end{subfigure}%
+\caption{A figure with two subfigures}
+\label{fig:test}
+\end{figure}
+
+
+
+%\begin{figure}[]
+%\raggedright
+%\includegraphics[width=20mm]{corEscolhivel.jpg}
+%\caption{Carta que permite escolher a cor (1). \label{corEsc}}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=20mm]{formaEscolhivel.jpg}
+%\caption{Carta que permite escolher a forma (2). \label{formaEsc}}
+%\end{figure}
+%
+%\begin{figure}
+%\raggedright
+%\includegraphics[width=20mm]{todas.jpg}
+%\caption{Carta universal (3). \label{Univ}}
+%\end{figure}
+
 Uma jogada é válida se for feita uma coluna ou linha com cartas nas seguintes condições:
 
 \begin{enumerate}
@@ -105,14 +155,19 @@ A pontuação é calculada com base no número de cartas por linha e coluna engl
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Representação do Estado do Jogo}
 
-O tabuleiro inicial corresponde a uma grelha de 60x60 visto que existem 60 cartas no total. Não existem posições iniciais pois trata-se de um jogo de cartas. Por baixo do tabuleiro é representada a mão do jogador.
-
+O tabuleiro inicial corresponde a uma grelha de 60x60 visto que existem 60 cartas no total. Não existem posições iniciais pois trata-se de um jogo de cartas. Por baixo do tabuleiro é representada a mão do jogador. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Visualização do Tabuleiro}
 
-Descrever a forma de visualização do tabuleiro em modo de texto e o(s) predicado(s) Prolog construídos para o efeito.
-Deve ser incluída pelo menos uma imagem correspondente ao output produzido pelo predicado de visualização.
+A representação do tabuleiro será feita de forma textual parecendo-se com o seguinte: \linebreak ---- ---- ---- \linebreak
+| r* |    |    | \linebreak
+|----|----|----| \linebreak
+|    |    |    | \linebreak
+|----|----|----| \linebreak
+|    |    |    | \linebreak
+ ---- ---- ----  \linebreak
+\linebreak
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
