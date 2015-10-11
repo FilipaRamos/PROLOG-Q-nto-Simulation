@@ -7,6 +7,8 @@
 \usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{verbatim}
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
 
 
 \begin{document}
@@ -140,13 +142,14 @@ A pontuação é calculada com base no número de cartas por linha e coluna engl
 O menu inicial permitirá a escolha entre as seguintes possibilidades:
 
 \begin{enumerate}
+	\item Jogador vs Jogador;
 	\item Jogador vs Computador;
 	\item Computador vs Computador;
 	\item Sair do Jogo. 
 \end{enumerate}
 
 \par
-O tabuleiro inicial corresponde a uma grelha de 5x5. À medida que o jogo evolui, o tabuleiro é aumentado 5 casas horizontal e verticalmente. Não existem posições iniciais pois trata-se de um jogo de cartas. Por baixo do tabuleiro é representada a mão do jogador. No estado inicial, é visível apenas o tabuleiro e a mão do jogador que é atribuida de forma aleatória (5 cartas). A cada jogada é atualizado o tabuleiro posicionando as cartas jogadas e são dadas cartas a quem as gastou de modo a perfazer 5. O estado de vitória ou derrota corresponde ao final do jogo e é identificada através de uma mensagem no ecrã.
+O tabuleiro inicial corresponde a uma grelha de 5x5. À medida que o jogo evolui, o tabuleiro é aumentado 5 casas horizontal e verticalmente. Inicialmente, o tabuleiro tem apenas uma carta no centro que é escolhida de forma aleatória da pilha. Por baixo do tabuleiro é representada a mão do jogador (5 cartas). A cada jogada é atualizado o tabuleiro posicionando as cartas jogadas e são dadas cartas a quem as gastou de modo a perfazer 5. O estado de vitória ou derrota corresponde ao final do jogo e é identificada através de uma mensagem no ecrã.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Visualização do Tabuleiro}
@@ -161,14 +164,66 @@ A representação do tabuleiro será feita de forma textual através de barras e
 
 Os predicados implementados foram os seguintes:
 
-\begin{enumerate}
-	\item PlinhaHorizontal(N) :- N>0 , write(' '), write ("----"), N1 is N-1 , linhaHorizontal(N1).
-		\subitem  - escreve uma linha horizontal.
-	\item linhaVertical(N) :- N>0, write('|'), write("    ") , write('|'), N1 is N-1, linhaVertical(N1).
-		\subitem  - escreve uma linha vertical.
-	\item board(N, M) :- PlinhaHorizontal(N), linhaVertical(M).
-		\subitem  - faz output do tabuleiro. 
-\end{enumerate}
+\begin{alltt}
+	fguideLine(N, CC) :- CC==N, write('    ').
+	fguideLine(N, CC) :- CC < N, CC2 is CC+1, write('    '), \newline L is 65+CC, format('~1c', [L]) , write(' '), fguideLine(N, CC2).
+\end{alltt}
+		\normalfont - escreve os números das linhas e as letras identificadoras das colunas.
+\begin{alltt}
+	fHorizontalLine(0).
+	fHorizontalLine(N) :- N>0 , write('  '), write('----'), N1 is N-1,\newline fHorizontalLine(N1).
+
+		 \normalfont - f significa "first", ou seja, os predicados com f desenham a primeira linha do tabuleiro.
+\end{alltt}
+\begin{alltt}
+	sHorizontalLine(0, [], \_CC) :- write('|'),write(' '), write(\_CC).
+	sHorizontalLine(N, [L|R], \_CC) :- N>0 , write(\_CC), write(' '), \newline write('|'), writetile(L), N1 is N-1, sHorizontalLine(N1, R, \_CC2).
+\end{alltt}
+		\normalfont  - s significa "second", ou seja, estes predicados desenham a "segunda" linha do tabuleiro o que corresponde a todas as linhas entre a primeira e a última.
+
+\begin{alltt}
+	tHorizontalLine(0) :-  write('|').
+	tHorizontalLine(N) :- N>0, write(' '), write('|'), \newline write('----'), N1 is N-1 , tHorizontalLine(N1).
+\end{alltt}
+		\normalfont - t refere-se a "third" sendo estes os predicados que desenham a última linha do tabuleiro.
+
+\begin{alltt}
+	displayBoardaux([]).
+	displayBoardaux([L1]) :- length(L1,N1), sHorizontalLine(N1,L1,0), nl.
+	displayBoardaux([L1|R]) :- R \= [], length(L1,N1),  \newline sHorizontalLine(N1, L1,0), nl, tHorizontalLine(N1), nl, displayBoardaux(R).
+\end{alltt}
+		\normalfont - predicados auxiliares que ajudam a fazer o display do tabuleiro.
+
+\begin{alltt}
+	listElement([],0, _X).
+	listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
+\end{alltt}
+		\normalfont - mais predicados que auxiliam na construção do tabuleiro. 
+\begin{alltt}
+	displayBoard([L1|R]) :-  length(L1,N1), nl, fguideLine(N1, 0), nl, \newline fHorizontalLine(N1), nl, displayBoardaux([L1|R]), \newline fHorizontalLine(N1), nl, fguideLine(N1, 0), nl.
+\end{alltt}
+		\normalfont - predicado que faz o display do tabuleiro.
+
+\begin{alltt}
+	createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), \newline listElement(Matrix,H,L). 
+\end{alltt}
+		\normalfont - cria a matriz que corresponde ao tabuleiro.
+
+\begin{alltt}
+	createBoard(W,H) :- createMatrix(W,H, B), displayBoard(B).
+\end{alltt}
+		\normalfont - faz output do tabuleiro e cria a matrix correspondente.
+\begin{alltt}
+	expand_matrix_up(Matrix, [L|Matrix]) :- empty_tile( E ), \newline matrix_width(Matrix, W), listElement(L, W, E).
+	expand_matrix_down(Matrix, NewMatrix) :- empty_tile( E ), \newline matrix_width(Matrix, W), listElement(L, W, E),\newline append(Matrix, [L], NewMatrix).
+
+	expand_matrix_left([],[]).
+	expand_matrix_left([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), \newline append([E], L, NL), expand_matrix_left(Matrix, NewMatrix).
+	expand_matrix_right([],[]).
+	expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), \newline append(L, [E], NL), expand_matrix_right(Matrix, NewMatrix). 
+\end{alltt}
+		\normalfont - para expandir a matriz a cada jogada. 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Movimentos}

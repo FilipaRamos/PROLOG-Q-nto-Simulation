@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.8)  10 OCT 2015 20:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.8)  11 OCT 2015 19:27
 entering extended mode
 **"C:/Users/utilizador/Documents/Universidade/PLOG/Projeto/PROLOG-Q-nto-Simulat
 ion/midterm report/PLOG_TP1_RI_#Q!nto_2.tex"
@@ -301,19 +301,22 @@ Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
 \verbatim@line=\toks18
 \verbatim@in@stream=\read1
 )
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\alltt.sty"
+Package: alltt 1997/06/16 v2.0g defines alltt environment
+)
 (PLOG_TP1_RI_#Q!nto_2.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
 
 ("C:\Program Files\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -331,69 +334,110 @@ LaTeX Font Info:    ... okay on input line 12.
 ) <feup-logo.png, id=1, 2252.415pt x 742.775pt>
 File: feup-logo.png Graphic file (type png)
  <use feup-logo.png>
-Package pdftex.def Info: feup-logo.png used on input line 33.
+Package pdftex.def Info: feup-logo.png used on input line 35.
 (pdftex.def)             Requested size: 225.2547pt x 74.28185pt.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 33.
+(Font)              <12> on input line 35.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 33.
+(Font)              <8> on input line 35.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 33.
+(Font)              <6> on input line 35.
  [1
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map} <./feup-logo.png>]
 <q!ntologo.jpg, id=10, 1505.625pt x 1326.9575pt>
 File: q!ntologo.jpg Graphic file (type jpg)
  <use q!ntologo.jpg>
-Package pdftex.def Info: q!ntologo.jpg used on input line 83.
+Package pdftex.def Info: q!ntologo.jpg used on input line 85.
 (pdftex.def)             Requested size: 256.0748pt x 225.68103pt.
  [2 <./q!ntologo.jpg>] <especiais.jpg, id=15, 350.5095pt x 113.223pt>
 File: especiais.jpg Graphic file (type jpg)
  <use especiais.jpg>
-Package pdftex.def Info: especiais.jpg used on input line 112.
+Package pdftex.def Info: especiais.jpg used on input line 114.
 (pdftex.def)             Requested size: 184.9429pt x 59.74184pt.
 
 <points.jpg, id=16, 1156.32pt x 650.43pt>
 File: points.jpg Graphic file (type jpg)
  <use points.jpg>
-Package pdftex.def Info: points.jpg used on input line 121.
+Package pdftex.def Info: points.jpg used on input line 123.
 (pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
 
 <points2.jpg, id=17, 1156.32pt x 650.43pt>
 File: points2.jpg Graphic file (type jpg)
  <use points2.jpg>
-Package pdftex.def Info: points2.jpg used on input line 127.
+Package pdftex.def Info: points2.jpg used on input line 129.
 (pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
 
 <quinto.jpg, id=18, 1156.32pt x 650.43pt>
 File: quinto.jpg Graphic file (type jpg)
  <use quinto.jpg>
-Package pdftex.def Info: quinto.jpg used on input line 133.
+Package pdftex.def Info: quinto.jpg used on input line 135.
 (pdftex.def)             Requested size: 227.62204pt x 128.02927pt.
  [3 <./especiais.jpg> <./points.jpg> <./points2.jpg>] <board.jpg, id=22, 200.24
 812pt x 128.73094pt>
 File: board.jpg Graphic file (type jpg)
 
 <use board.jpg>
-Package pdftex.def Info: board.jpg used on input line 158.
+Package pdftex.def Info: board.jpg used on input line 161.
 (pdftex.def)             Requested size: 142.26378pt x 91.46048pt.
- [4 <./quinto.jpg> <./board.jpg>] [5] (PLOG_TP1_RI_#Q!nto_2.aux) ) 
+LaTeX Font Info:    Try loading font information for OT1+txtt on input line 167
+.
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\txfonts\ot1txtt.fd"
+File: ot1txtt.fd 2000/12/15 v3.1
+)
+[4 <./quinto.jpg> <./board.jpg>]
+Overfull \hbox (1.499pt too wide) in paragraph at lines 174--174
+[]\OT1/txtt/m/n/10 fHorizontalLine(N) :- N>0 , write('  '), write('----'), N1 i
+s N-1, 
+ []
+
+
+Overfull \hbox (17.24895pt too wide) in paragraph at lines 192--192
+[]\OT1/txtt/m/n/10 displayBoardaux([L1]) :- length(L1,N1), sHorizontalLine(N1,L
+1,0), nl.[] 
+ []
+
+
+Overfull \hbox (48.74886pt too wide) in paragraph at lines 193--193
+\OT1/txtt/m/n/10 sHorizontalLine(N1, L1,0), nl, tHorizontalLine(N1), nl, displa
+yBoardaux(R).[] 
+ []
+
+
+Overfull \hbox (1.499pt too wide) in paragraph at lines 199--199
+[]\OT1/txtt/m/n/10 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N
+1, X).[] 
+ []
+
+
+Overfull \hbox (1.499pt too wide) in paragraph at lines 203--203
+[]\OT1/txtt/m/n/10 displayBoard([L1|R]) :-  length(L1,N1), nl, fguideLine(N1, 0
+), nl, 
+ []
+
+
+Overfull \hbox (1.499pt too wide) in paragraph at lines 223--223
+[]\OT1/txtt/m/n/10 expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile
+( E ), 
+ []
+
+[5] [6] (PLOG_TP1_RI_#Q!nto_2.aux) ) 
 Here is how much of TeX's memory you used:
- 1859 strings out of 493698
- 23822 string characters out of 3144397
- 84819 words of memory out of 3000000
- 5182 multiletter control sequences out of 15000+200000
- 8539 words of font info for 30 fonts, out of 3000000 for 9000
+ 1909 strings out of 493698
+ 24636 string characters out of 3144397
+ 88041 words of memory out of 3000000
+ 5224 multiletter control sequences out of 15000+200000
+ 8815 words of font info for 31 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 27i,7n,23p,766b,234s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program F
-iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
-1/public/amsfonts/cm/cmti10.pfb>
-Output written on PLOG_TP1_RI_#Q!nto_2.pdf (5 pages, 582558 bytes).
+ 27i,7n,23p,749b,254s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files/MiKTeX 2.9/fonts/type1/pu
+blic/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
+fonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pf
+b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/txfonts/txtt.pfb>
+Output written on PLOG_TP1_RI_#Q!nto_2.pdf (6 pages, 590885 bytes).
 PDF statistics:
- 44 PDF objects out of 1000 (max. 8388607)
+ 51 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
