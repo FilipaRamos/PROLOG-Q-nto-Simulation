@@ -159,10 +159,29 @@ A representação do tabuleiro será feita de forma textual através de barras e
 \caption{Tabuleiro exemplo visualizado no SICStus de 6x6. \label{board}}
 \end{figure}
 
+Os predicados implementados foram os seguintes:
+
+\begin{enumerate}
+	\item PlinhaHorizontal(N) :- N>0 , write(' '), write ("----"), N1 is N-1 , linhaHorizontal(N1).
+		\subitem  - escreve uma linha horizontal.
+	\item linhaVertical(N) :- N>0, write('|'), write("    ") , write('|'), N1 is N-1, linhaVertical(N1).
+		\subitem  - escreve uma linha vertical.
+	\item board(N, M) :- PlinhaHorizontal(N), linhaVertical(M).
+		\subitem  - faz output do tabuleiro. 
+\end{enumerate}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Movimentos}
 
-Elencar os movimentos (tipos de jogadas) possíveis e definir os cabeçalhos dos predicados que serão utilizados (ainda não precisam de estar implementados).
+Os movimentos possíveis são em linha tanto horizontal como vertical. 
 
+\section{Bibliografia}
+
+\begin{enumerate}
+	\item http://www.pdggames.com/images/resources/TriplePlayRulesmore.pdf
+	\item http://www.pdggames.com/product/qnto
+	\item https://www.youtube.com/watch?v=t0RolluapXg
+	\item https://boardgamegeek.com/boardgame/164972/qnto
+\end{enumerate}
 
 \end{document}
