@@ -151,6 +151,12 @@ O menu inicial permitirá a escolha entre as seguintes possibilidades:
 \par
 O tabuleiro inicial corresponde a uma grelha de 5x5. À medida que o jogo evolui, o tabuleiro é aumentado 5 casas horizontal e verticalmente. Inicialmente, o tabuleiro tem apenas uma carta no centro que é escolhida de forma aleatória da pilha. Por baixo do tabuleiro é representada a mão do jogador (5 cartas). A cada jogada é atualizado o tabuleiro posicionando as cartas jogadas e são dadas cartas a quem as gastou de modo a perfazer 5. O estado de vitória ou derrota corresponde ao final do jogo e é identificada através de uma mensagem no ecrã.
 
+\begin{figure}[hb!]
+\centering
+\includegraphics[width=80mm]{estado.jpg}
+\caption{Exemplo de tabuleiro inicial de 3x3 com carta gerada aleatoriamente no centro. \label{estado}}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Visualização do Tabuleiro}
 
@@ -228,7 +234,44 @@ Os predicados implementados foram os seguintes:
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Movimentos}
 
-Os movimentos possíveis são em linha tanto horizontal como vertical. 
+Os movimentos possíveis são em linha tanto horizontal como vertical. A cada movimento feito tem de ser verificada a validade da jogada. Para isto serão criados predicados de verificação e validação e predicados para permitir os movimentos de cartas no tabuleiro. 
+
+\begin{alltt}
+	color(r). 
+	color(b).
+	color(g).
+	color(y).
+	color(c).
+\end{alltt}
+		\normalfont - definição das cores possíveis.
+\begin{alltt}
+	shape('*').
+	shape('!').
+	shape('#').
+	shape('+').
+	shape('&').
+	shape(s).
+\end{alltt}
+		\normalfont - definição das formas possíveis.
+\begin{alltt}
+	oneTile(X) :- color(C), shape(F), X = tile(C,F).
+	tile(' ',' ').
+	tile(C, F) :- color(C), shape(F).
+\end{alltt}
+		\normalfont - criação de cartas. 
+\begin{alltt}
+	writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
+\end{alltt}
+		\normalfont - predicado que imprime as cartas no tabuleiro.
+
+\begin{alltt}
+	placeTile(X,Y).
+\end{alltt}
+		\normalfont - predicado que permitirá colocar uma carta no tabuleiro na posição (x,y).
+\begin{alltt}
+	verifyMovement(M).
+\end{alltt}
+		\normalfont - predicado que verificará se a jogada M é válida ou não. Este predicado necessitará de várias funções auxiliares para verificar as 3 possíveis jogadas válidas referidas na secção 1.2 (segunda enumeração).
 
 \section{Bibliografia}
 
