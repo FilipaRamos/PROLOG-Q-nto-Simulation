@@ -174,29 +174,28 @@ Os predicados implementados foram os seguintes:
 	fguideLine(N, CC) :- CC==N, write('    ').
 	fguideLine(N, CC) :- CC < N, CC2 is CC+1, write('    '), \newline L is 65+CC, format('~1c', [L]) , write(' '), fguideLine(N, CC2).
 \end{alltt}
-		\normalfont - escreve os números das linhas e as letras identificadoras das colunas.
+		\normalfont - escreve as letras identificadoras das colunas.
 \begin{alltt}
 	fHorizontalLine(0).
-	fHorizontalLine(N) :- N>0 , write('  '), write('----'), N1 is N-1,\newline fHorizontalLine(N1).
+	fHorizontalLine(N) :- N>0 , write('  '), write('----'), \newline N1 is N-1 , fHorizontalLine(N1).
 
-		 \normalfont - f significa "first", ou seja, os predicados com f desenham a primeira linha do tabuleiro.
+		 \normalfont - f significa "first", ou seja, os predicados com f desenham o primeiro tipo de linha do tabuleiro. ( ---- ---- ----)
 \end{alltt}
 \begin{alltt}
-	sHorizontalLine(0, [], \_CC) :- write('|'),write(' '), write(\_CC).
-	sHorizontalLine(N, [L|R], \_CC) :- N>0 , write(\_CC), write(' '), \newline write('|'), writetile(L), N1 is N-1, sHorizontalLine(N1, R, \_CC2).
+	sHorizontalLine(0, []) :- write('|'),write(' ').
+	sHorizontalLine(N, [L|R]) :- N>0, write(' '),  write('|'), \newline writetile(L), N1 is N-1, sHorizontalLine(N1, R).
 \end{alltt}
-		\normalfont  - s significa "second", ou seja, estes predicados desenham a "segunda" linha do tabuleiro o que corresponde a todas as linhas entre a primeira e a última.
-
+		\normalfont  - s significa "second", ou seja, estes predicados desenham o segundo tipo de linha do tabuleiro. (|    |    |    |)
 \begin{alltt}
 	tHorizontalLine(0) :-  write('|').
-	tHorizontalLine(N) :- N>0, write(' '), write('|'), \newline write('----'), N1 is N-1 , tHorizontalLine(N1).
+	tHorizontalLine(N) :- N>0, write(' '), write('|'), write('----'), \newline N1 is N-1 , tHorizontalLine(N1).
 \end{alltt}
-		\normalfont - t refere-se a "third" sendo estes os predicados que desenham a última linha do tabuleiro.
+		\normalfont - t refere-se a "third" sendo estes os predicados que desenham o último tipo de linha do tabuleiro. (|----|----|----|)
 
 \begin{alltt}
-	displayBoardaux([]).
-	displayBoardaux([L1]) :- length(L1,N1), sHorizontalLine(N1,L1,0), nl.
-	displayBoardaux([L1|R]) :- R \= [], length(L1,N1),  \newline sHorizontalLine(N1, L1,0), nl, tHorizontalLine(N1), nl, displayBoardaux(R).
+	displayBoardaux([], _C).
+	displayBoardaux([L1], C) :-  write(C) ,write(' '), length(L1,N1), \newline sHorizontalLine(N1,L1), write(' '), write(C), nl.
+	displayBoardaux([L1|R], C) :- R \= [], length(L1,N1), C < N1, C2 is C+1, \newline write(C), write(' '), sHorizontalLine(N1, L1), write(' '), \newline write(C), nl, write('  '), tHorizontalLine(N1), nl, displayBoardaux(R, C2).
 \end{alltt}
 		\normalfont - predicados auxiliares que ajudam a fazer o display do tabuleiro.
 
@@ -206,7 +205,7 @@ Os predicados implementados foram os seguintes:
 \end{alltt}
 		\normalfont - mais predicados que auxiliam na construção do tabuleiro. 
 \begin{alltt}
-	displayBoard([L1|R]) :-  length(L1,N1), nl, fguideLine(N1, 0), nl, \newline fHorizontalLine(N1), nl, displayBoardaux([L1|R]), \newline fHorizontalLine(N1), nl, fguideLine(N1, 0), nl.
+	displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), \newline fguideLine(N1, 0), nl,write('  '), fHorizontalLine(N1), \newline nl, displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), \newline nl, write('  '), fguideLine(N1, 0), nl.
 \end{alltt}
 		\normalfont - predicado que faz o display do tabuleiro.
 
