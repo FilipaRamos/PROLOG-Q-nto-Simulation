@@ -54,7 +54,27 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
 /* Generate Hand */
-randomHand() :- , displayHand().
+randomHand(0).
+randomHand(N) :- N>0, random(1, 5, R1), randomColor(R1, C), 
+			randomShape(1, 6, R2), randomShape(R2, S), tile(C, S),
+			hand(tile(C, S)), N1 is N+1, randomHand(N1).
+
+hand(T) :- hand([T|R]).
+
+/* Choose a random color */
+randomColor(1, color(r)).
+randomColor(2, color(b)).
+randomColor(3, color(g)).
+randomColor(4, color(y)).
+randomColor(5, color(c)).
+
+/* Choose a random shape */
+randomShape(1, shape('*')).
+randomShape(2, shape('!')).
+randomShape(3, shape('#')).
+randomShape(4, shape('+')).
+randomShape(5, shape('&')).
+randomShape(6, shape(s)).
 
 /* Display hand */
 displayHand([H|_]) :- write(H), fail. 
@@ -62,7 +82,6 @@ displayHand([H|T]) :- write(H), write('   '), displayHand(T).
 
 /*Main*/
 createBoard(W,H) :- createMatrix(W,H, B), displayBoard(B).
-
 
 /*expand matrix*/
 
@@ -78,7 +97,10 @@ listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /* menu */
 
-menu(A) :- write('1. Play'), write('   '), write('2. Exit').
+menu :- repeat, write('      MENU     '), nl,
+			write('1. Play'), nl, write('2. Exit'), nl, 
+			write('Write the number of the option followed by a dot.'), nl,
+			read(C), C>0, C=<2, choice(C).
 
 choice(1) :- createBoard(5,5).
 choice(2) :- fail.
