@@ -1,6 +1,9 @@
 
 /*PROLOG Q!NTO SIMULATION*/
 
+/* LIBRARYS */
+use_module(library(random)).
+
 /* represents the possible colors */
 color(r). 
 color(b).
@@ -50,6 +53,12 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
+/* Generate Hand */
+randomHand() :- , displayHand().
+
+/* Display hand */
+displayHand([H|_]) :- write(H), fail. 
+displayHand([H|T]) :- write(H), write('   '), displayHand(T).
 
 /*Main*/
 createBoard(W,H) :- createMatrix(W,H, B), displayBoard(B).
