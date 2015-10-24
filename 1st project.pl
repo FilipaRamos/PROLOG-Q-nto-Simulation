@@ -1,14 +1,14 @@
 
 /*PROLOG Q!NTO SIMULATION*/
 
-// represents the possible colors
+/* represents the possible colors */
 color(r). 
 color(b).
 color(g).
 color(y).
 color(c).
 
-// represents the possible shapes
+/* represents the possible shapes */
 shape('*').
 shape('!').
 shape('#').
@@ -67,3 +67,9 @@ expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), append(L, [E]
 listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
+/* menu */
+
+menu(A) :- write('1. Play'), write('   '), write('2. Exit').
+
+choice(1) :- createBoard(5,5).
+choice(2) :- fail.
