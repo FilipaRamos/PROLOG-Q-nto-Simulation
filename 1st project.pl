@@ -59,30 +59,31 @@ hand :- {}.
 /* Add Tile to Hand */
 addHandTile(C, [H|T]) :- append(C, [H|T], hand). /* precisa de ser corrigido */
 
-/* Generate Hand */
-randomHand(0).
-randomHand(N) :- N>0, random(1, 5, R1), randomColor(R1, C), 
-			randomShape(1, 6, R2), randomShape(R2, S),
-			addHandTile(tile(C, S), hand, hand),
-			N1 is N+1, randomHand(N1).
-
 /* Choose a random color */
-randomColor(1, color(r)).
-randomColor(2, color(b)).
-randomColor(3, color(g)).
-randomColor(4, color(y)).
-randomColor(5, color(c)).
+randomColor(1, r).
+randomColor(2, b).
+randomColor(3, g).
+randomColor(4, y).
+randomColor(5, c).
 
 /* Choose a random shape */
-randomShape(1, shape('*')).
-randomShape(2, shape('!')).
-randomShape(3, shape('#')).
-randomShape(4, shape('+')).
-randomShape(5, shape('&')).
-randomShape(6, shape(s)).
+randomShape(1, '*').
+randomShape(2, '!').
+randomShape(3, '#').
+randomShape(4, '+').
+randomShape(5, '&').
+randomShape(6, s).
 
 /* Display hand */
 displayHand([H|T]) :- write(H), write('   '), displayHand(T).
+displayTile(C,S) :- write(C), write(S), write(' | ').
+
+/* Generate Hand */
+randomHand(0).
+randomHand(N) :- N>0, random(1, 5, R1), randomColor(R1, C), 
+			random(1, 6, R2), randomShape(R2, S),
+			displayTile(C,S), N1 is N-1,
+			randomHand(N1).
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
@@ -100,11 +101,17 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /* menu */
-menu :- repeat, write('      MENU     '), nl,
-			write('1. Play'), nl, write('2. Exit'), nl, 
+logo :- write(' ________________________'), nl,
+		write('|                        |'), nl,
+		write('|          Q!NTO         |'), nl,
+		write('|________________________|'), nl, nl.
+
+menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
+			write('    ----- '), write('1. Play'), write(' -----'), nl, 
+			write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
 			write('Write the number of the option followed by a dot.'), nl,
-			read(C), C>0, C=<2, choice(C).
+			read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
-choice(1) :- createBoard(5,5).
+choice(1) :- createBoard(5,5), nl, write('     | '), randomHand(5).
 choice(2) :- abort.
