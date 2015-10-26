@@ -1,9 +1,6 @@
 
 /*PROLOG Q!NTO SIMULATION*/
 
-/* LIBRARYS */
-use_module(library(random)).
-
 /* represents the possible colors */
 color(r). 
 color(b).
@@ -106,7 +103,7 @@ logo :- write(' ________________________'), nl,
 		write('|          Q!NTO         |'), nl,
 		write('|________________________|'), nl, nl.
 
-menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
+menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
 			write('    ----- '), write('1. Play'), write(' -----'), nl, 
 			write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
 			write('Write the number of the option followed by a dot.'), nl,
