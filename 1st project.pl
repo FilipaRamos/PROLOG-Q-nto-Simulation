@@ -113,5 +113,5 @@ menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'),
 			read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
-choice(1) :- createBoard(5,5), nl, write('     | '), randomHand(5).
+choice(1) :- createBoard(5,5), nl, write('     | '), randomHand(5), nl.
 choice(2) :- abort.
