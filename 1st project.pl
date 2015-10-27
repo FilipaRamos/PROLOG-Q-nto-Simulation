@@ -85,6 +85,17 @@ randomHand(N) :- N>0, random(1, 5, R1), randomColor(R1, C),
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
 
+/* Computer - Move Tile */
+computerMove.
+
+/* User - Move Tile */ 
+numberTiles :- write("How many tiles do you want to play? "), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
+
+moveTile(0).
+moveTile(N) :- N > 0, write("Choose the tile to play. Color: "), 
+			read(C), write("Shape: "), read(S), write("Choose where to place it."),
+			read(P), N1 is N-1, moveTile(N1).
+
 /*expand matrix*/
 
 empty_tile(tile(' ',' ')).
@@ -110,5 +121,6 @@ menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write('
 			read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
-choice(1) :- createBoard(5,5), nl, write('     | '), randomHand(5), nl.
+choice(1) :- createBoard(5,5), nl, write('     | '), 
+			randomHand(5), write("cenas"), numberTiles.
 choice(2) :- abort.
