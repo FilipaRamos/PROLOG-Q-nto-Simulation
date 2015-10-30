@@ -22,7 +22,50 @@ oneTile(X) :- color(C), shape(F), X = tile(C,F).
 tile(' ',' ').
 tile(C, F) :- color(C), shape(F).
 
+/* Possible Normal Tiles */
+tile(r, '*').
+tile(r, '!').
+tile(r, '#').
+tile(r, '+').
+tile(r, '&').
+
+tile(b, '*').
+tile(b, '!').
+tile(b, '#').
+tile(b, '+').
+tile(b, '&').
+
+tile(g, '*').
+tile(g, '!').
+tile(g, '#').
+tile(g, '+').
+tile(g, '&').
+
+tile(y, '*').
+tile(y, '!').
+tile(y, '#').
+tile(y, '+').
+tile(y, '&').
+
+tile(c, '*').
+tile(c, '!').
+tile(c, '#').
+tile(c, '+').
+tile(c, '&').
+
+/* Possible Special Tiles */
+
+/* Auxiliary Functions */
+tileColor(tile(C, F)) :- C.
+tileShape(tile(C, F)) :- F.
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
+
+/* Existent Tiles */
+deck :- findall(T, oneTile(T), X).
+
+imprimeDeck(-1).
+imprimeDeck(N) :- use_module(library(lists)), nth0(N, deck, tile(r,'*')), 
+				writetile(tile(b, '#')), N1 is N-1, imprimeDeck(N1).
 
 /*  A   B    C  D .... */
 fguideLine(N, CC) :- CC==N, write('    ').
