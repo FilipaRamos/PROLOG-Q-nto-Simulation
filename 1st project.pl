@@ -62,11 +62,39 @@ tileShape(tile(C, F)) :- F.
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
-makeDeck :- findall(T, oneTile(T), X), imprimeDeck(0, X).
+makeDeck :- findall(T, oneTile(T), X). /*, imprimeDeck(0, X). */
 
-imprimeDeck(25).
 imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
 				writetile(X), N1 is N+1, imprimeDeck(N1, L).
+
+/* Choose a random color */
+randomColor(1, r).
+randomColor(2, b).
+randomColor(3, g).
+randomColor(4, y).
+randomColor(5, c).
+
+/* Choose a random shape */
+randomShape(1, '*').
+randomShape(2, '!').
+randomShape(3, '#').
+randomShape(4, '+').
+randomShape(5, '&').
+randomShape(6, s).
+
+/* Hand */
+hand([]).
+makeHand(N, D) :- randomHand(N, D, hand).
+
+/* Display hand */
+displayHand([H|T]) :- write(H), write('   '), displayHand(T).
+displayTile(C,S) :- write(C), write(S), write(' | ').
+
+/* Generate Hand */
+randomHand(0).
+randomHand(N, L, L2) :- random(0, 34, R), nth0(R, L, X), delete(L, X, A),
+						append(L, L2, L2), N1 is N-1, randomHand(N1, L, L2).
+
 
 /*  A   B    C  D .... */
 fguideLine(N, CC) :- CC==N, write('    ').
@@ -99,32 +127,6 @@ hand :- {}.
 
 /* Add Tile to Hand */
 addHandTile(C, [H|T]) :- append(C, [H|T], hand). /* precisa de ser corrigido */
-
-/* Choose a random color */
-randomColor(1, r).
-randomColor(2, b).
-randomColor(3, g).
-randomColor(4, y).
-randomColor(5, c).
-
-/* Choose a random shape */
-randomShape(1, '*').
-randomShape(2, '!').
-randomShape(3, '#').
-randomShape(4, '+').
-randomShape(5, '&').
-randomShape(6, s).
-
-/* Display hand */
-displayHand([H|T]) :- write(H), write('   '), displayHand(T).
-displayTile(C,S) :- write(C), write(S), write(' | ').
-
-/* Generate Hand */
-randomHand(0).
-randomHand(N) :- N>0, random(1, 5, R1), randomColor(R1, C), 
-			random(1, 6, R2), randomShape(R2, S),
-			displayTile(C,S), N1 is N-1,
-			randomHand(N1).
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
