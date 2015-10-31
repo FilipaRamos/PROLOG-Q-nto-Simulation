@@ -7,6 +7,7 @@ color(b).
 color(g).
 color(y).
 color(c).
+color(clr).
 
 /* represents the possible shapes */
 shape('*').
@@ -61,11 +62,11 @@ tileShape(tile(C, F)) :- F.
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
-deck :- findall(T, oneTile(T), X).
+makeDeck :- findall(T, oneTile(T), X), imprimeDeck(0, X).
 
-imprimeDeck(-1).
-imprimeDeck(N) :- use_module(library(lists)), nth0(N, deck, tile(r,'*')), 
-				writetile(tile(b, '#')), N1 is N-1, imprimeDeck(N1).
+imprimeDeck(25).
+imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
+				writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /*  A   B    C  D .... */
 fguideLine(N, CC) :- CC==N, write('    ').
