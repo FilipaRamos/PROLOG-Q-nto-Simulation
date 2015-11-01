@@ -138,7 +138,10 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /* Get Tiles from the board */
-getTile(B, Px, Py, T) :- .
+getTo([H|T], 0, Py, R).
+getTo([H|T], Px, Py, R) :- N is Px-1, getTo(T, N, Py, T).
+getTile(L, B, Px, Py, T) :- X is Px -1, Lf is L*X, I is Lf+Py, 
+						nth1(I, H, T).
 
 /* Valid Moves */
 
@@ -147,102 +150,102 @@ compareColor(C, C1) :- \+ C = C1.
 compareColor(C, ' ').
 compareColor(' ', C).
 
-difColorLinha(0, B, Px, Py, T).
-difColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
+difColorLinha(0, L, B, Px, Py, T).
+difColorLinha(N, L, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
-difColorLinha(N, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, L, B, Px, P, T).
+difColorLinha(N, L, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, L, B, Px, P, T).
 
-difColorColuna(0, B, Px, Py, T).
-difColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
+difColorColuna(0, L, B, Px, Py, T).
+difColorColuna(N, L, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
-difColorColuna(N, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, L, B, P, Py, T).
+difColorColuna(N, L, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, L, B, P, Py, T).
 
-difColors(N, B, Px, Py, T) :- difColorColuna(N, B, Px, Py, T).
-difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
+difColors(N, L, B, Px, Py, T) :- difColorColuna(N, L, B, Px, Py, T).
+difColors(N, L, B, Px, Py, T) :- difColorLinha(N, L, B, Px, Py, T).
 
 /* Same colors in line or row */
 compareColorEq(C, C1) :- C = C1.
 compareColorEq(C, ' ').
 compareColorEq(' ', C).
 
-sameColorLinha(0, B, Px, Py, T).
-sameColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
+sameColorLinha(0, L, B, Px, Py, T).
+sameColorLinha(N, L, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, B, Px, P, T).
-sameColorLinha(N, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
+							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, L, B, Px, P, T).
+sameColorLinha(N, L, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, B, Px, P, T).
+							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, L, B, Px, P, T).
 
-sameColorColuna(0, B, Px, Py, T).
-sameColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
+sameColorColuna(0, L, B, Px, Py, T).
+sameColorColuna(N, L, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, B, P, Py, T).
-sameColorColuna(N, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
+							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, L, B, P, Py, T).
+sameColorColuna(N, L, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, B, P, Py, T).
+							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, L, B, P, Py, T).
 
-sameColors(N, B, Px, Py, T) :- sameColorColuna(N, B, Px, Py, T).
-sameColors(N, B, Px, Py, T) :- sameColorLinha(N, B, Px, Py, T).
+sameColors(N, L, B, Px, Py, T) :- sameColorColuna(N, L, B, Px, Py, T).
+sameColors(N, L, B, Px, Py, T) :- sameColorLinha(N, L, B, Px, Py, T).
 
 /* Different shapes in line or row */
 compareShape(S, S1) :- \+ S = S1.
 compareShape(S, ' ').
 compareShape(' ', S1).
 
-difShapeLinha(0, B, Px, Py, T).
-difShapeLinha(N, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
+difShapeLinha(0, L, B, Px, Py, T).
+difShapeLinha(N, L, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
 								getTile(B, Px, P, T1), S1 is tileShape(T1),
-								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, Px, P, T).
-difShapeLinha(N, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, Px, P, T).
+difShapeLinha(N, L, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
 								getTile(B, Px, P, T1), S1 is tileShape(T1),
-								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, Px, P, T).
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, Px, P, T).
 
-difShapeColuna(0, B, Px, Py, T).
-difShapeColuna(N, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
+difShapeColuna(0, L, B, Px, Py, T).
+difShapeColuna(N, L, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
 								getTile(B, P, Py, T1), S1 is tileShape(T1),
-								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, P, Py, T).
-difShapeColuna(N, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, P, Py, T).
+difShapeColuna(N, L, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
 								getTile(B, P, Py, T1), S1 is tileShape(T1),
-								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, P, Py, T). 
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, P, Py, T). 
 
-difShapes(N, B, Px, Py, T) :- difShapeColuna(N, B, Px, Py, T).
-difShapes(N, B, Px, Py, T) :- difShapeLinha(N, B, Px, Py, T).
+difShapes(N, L, B, Px, Py, T) :- difShapeColuna(N, L, B, Px, Py, T).
+difShapes(N, L, B, Px, Py, T) :- difShapeLinha(N, L, B, Px, Py, T).
 
 /* Same shapes in line or row */
 compareShapeEq(S, S1) :- S = S1.
 compareShapeEq(S, ' ').
 compareShapeEq(' ', S1).
 
-sameShapeLinha(0, B, Px, Py, T).
-sameShapeLinha(N, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
+sameShapeLinha(0, L, B, Px, Py, T).
+sameShapeLinha(N, L, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
 								getTile(B, Px, P, T1), S1 is tileShape(T1),
-								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, Px, P, T).
-sameShapeLinha(N, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, Px, P, T).
+sameShapeLinha(N, L, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
 								getTile(B, Px, P, T1), S1 is tileShape(T1),
-								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, Px, P, T).
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, Px, P, T).
 
-sameShapeColuna(0, B, Px, Py, T).
-sameShapeColuna(N, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
+sameShapeColuna(0, L, B, Px, Py, T).
+sameShapeColuna(N, L, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
 								getTile(B, P, Py, T1), S1 is tileShape(T1),
-								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, P, Py, T).
-sameShapeColuna(N, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, P, Py, T).
+sameShapeColuna(N, L, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
 								getTile(B, P, Py, T1), S1 is tileShape(T1),
-								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, P, Py, T). 
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, P, Py, T). 
 
-sameShapes(N, B, Px, Py, T) :- sameShapeColuna(N, B, Px, Py, T).
-sameShapes(N, B, Px, Py, T) :- sameShapeLinha(N, B, Px, Py, T).
+sameShapes(N, L, B, Px, Py, T) :- sameShapeColuna(N, L, B, Px, Py, T).
+sameShapes(N, L, B, Px, Py, T) :- sameShapeLinha(N, L, B, Px, Py, T).
 
 /* All possible valid moves */
-validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T).
+validMove(N, L, B, Px, Py, T) :- difColors(N, L, B, Px, Py, T).
+validMove(N, L, B, Px, Py, T) :- sameColors(N, L, B, Px, Py, T).
+validMove(N, L, B, Px, Py, T) :- difShapes(N, L, B, Px, Py, T).
+validMove(N, L, B, Px, Py, T) :- sameShapes(N, L, B, Px, Py, T).
 
 
 /* Load librarys */
