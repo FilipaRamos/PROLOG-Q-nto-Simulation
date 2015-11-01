@@ -86,14 +86,17 @@ randomShape(6, s).
 randomHand(0).
 randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
 						delete(L, X, L4), C1 is C-1, 
-						append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
+						append([X], L2, L3), N1 is N-1, randomHand(N1, L4, L3, C1).
 
 
 /* Hand */
-makeHand(N) :- makeDeck(X), write(X), randomHand(N, X, [], 36).
+/* makeHand(0, H) :- H = []. */
+/* N -> número de cartas da mão */
+/* L -> mão anterior */
+makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36), write(L).
 
 /* Display hand */
-displayHand([H|T]) :- write(H), write('   '), displayHand(T).
+displayHand(H) :- write(H).
 displayTile(C,S) :- write(C), write(S), write(' | ').
 
 
@@ -122,12 +125,6 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 
 
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
-
-/* Initial Hand */
-hand :- {}.
-
-/* Add Tile to Hand */
-addHandTile(C, [H|T]) :- append(C, [H|T], hand). /* precisa de ser corrigido */
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
@@ -171,6 +168,5 @@ menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write('
 			read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
-choice(1) :- createBoard(5,5), nl, write('     | '), 
-			randomHand(5), write("cenas"), numberTiles.
+choice(1) :- load, createBoard(5,5), nl, makeHand(5, []).
 choice(2) :- abort.
