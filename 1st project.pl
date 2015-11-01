@@ -138,10 +138,7 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /* Get Tiles from the board */
-getTo([H|T], 0, Py, R).
-getTo([H|T], Px, Py, R) :- N is Px-1, getTo(T, N, Py, T).
-getTile(L, B, Px, Py, T) :- X is Px -1, Lf is L*X, I is Lf+Py, 
-						nth1(I, H, T).
+getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
 /* Valid Moves */
 
@@ -150,24 +147,24 @@ compareColor(C, C1) :- \+ C = C1.
 compareColor(C, ' ').
 compareColor(' ', C).
 
-difColorLinha(0, L, B, Px, Py, T).
-difColorLinha(N, L, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
+difColorLinha(0, B, Px, Py, T).
+difColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorTile(N1, L, B, Px, P, T).
-difColorLinha(N, L, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
+difColorLinha(N, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorTile(N1, L, B, Px, P, T).
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
 
-difColorColuna(0, L, B, Px, Py, T).
-difColorColuna(N, L, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
+difColorColuna(0, B, Px, Py, T).
+difColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, L, B, P, Py, T).
-difColorColuna(N, L, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
+difColorColuna(N, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, L, B, P, Py, T).
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
 
-difColors(N, L, B, Px, Py, T) :- difColorColuna(N, L, B, Px, Py, T).
-difColors(N, L, B, Px, Py, T) :- difColorLinha(N, L, B, Px, Py, T).
+difColors(N, B, Px, Py, T) :- difColorColuna(N, B, Px, Py, T).
+difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
 
 /* Same colors in line or row */
 compareColorEq(C, C1) :- C = C1.
