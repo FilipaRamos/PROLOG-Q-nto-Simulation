@@ -62,25 +62,10 @@ tileShape(tile(C, F)) :- F.
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
-makeDeck(X) :- findall(T, oneTile(T), X). /*, imprimeDeck(0, X). */
+makeDeck(X) :- findall(T, oneTile(T), X).
 
 imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
 				writetile(X), N1 is N+1, imprimeDeck(N1, L).
-
-/* Choose a random color */
-randomColor(1, r).
-randomColor(2, b).
-randomColor(3, g).
-randomColor(4, y).
-randomColor(5, c).
-
-/* Choose a random shape */
-randomShape(1, '*').
-randomShape(2, '!').
-randomShape(3, '#').
-randomShape(4, '+').
-randomShape(5, '&').
-randomShape(6, s).
 
 /* Generate Hand */
 randomHand(0, L, L2, C).
@@ -158,24 +143,106 @@ getTile(B, Px, Py, T) :- .
 /* Valid Moves */
 
 /* Different colors in line or row */
+compareColor(C, C1) :- \+ C = C1.
+compareColor(C, ' ').
+compareColor(' ', C).
+
 difColorLinha(0, B, Px, Py, T).
 difColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
 							getTile(B, Px, P, T1), C1 is tileColor(T1),
-							\+ C = C1, N1 is N-1, difColorTile(N1, B, Px, P, T).
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
+difColorLinha(N, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
+							getTile(B, Px, P, T1), C1 is tileColor(T1),
+							compareColor(C, C1), N1 is N-1, difColorTile(N1, B, Px, P, T).
 
 difColorColuna(0, B, Px, Py, T).
 difColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
 							getTile(B, P, Py, T1), C1 is tileColor(T1),
-							\+ C = C1, N1 is N-1, difColorColuna(N1, B, P, Py, T).
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
+difColorColuna(N, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
+							getTile(B, P, Py, T1), C1 is tileColor(T1),
+							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
 
 difColors(N, B, Px, Py, T) :- difColorColuna(N, B, Px, Py, T).
 difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
 
+/* Same colors in line or row */
+compareColorEq(C, C1) :- C = C1.
+compareColorEq(C, ' ').
+compareColorEq(' ', C).
+
+sameColorLinha(0, B, Px, Py, T).
+sameColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
+							getTile(B, Px, P, T1), C1 is tileColor(T1),
+							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, B, Px, P, T).
+sameColorLinha(N, B, Px, Py, T) :- P0 is Py-1, C is tileColor(T),
+							getTile(B, Px, P, T1), C1 is tileColor(T1),
+							compareColorEq(C, C1), N1 is N-1, sameColorTile(N1, B, Px, P, T).
+
+sameColorColuna(0, B, Px, Py, T).
+sameColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
+							getTile(B, P, Py, T1), C1 is tileColor(T1),
+							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, B, P, Py, T).
+sameColorColuna(N, B, Px, Py, T) :- P is Px-1, C is tileColor(T), 
+							getTile(B, P, Py, T1), C1 is tileColor(T1),
+							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, B, P, Py, T).
+
+sameColors(N, B, Px, Py, T) :- sameColorColuna(N, B, Px, Py, T).
+sameColors(N, B, Px, Py, T) :- sameColorLinha(N, B, Px, Py, T).
+
 /* Different shapes in line or row */
-difShapeLinha().
+compareShape(S, S1) :- \+ S = S1.
+compareShape(S, ' ').
+compareShape(' ', S1).
+
+difShapeLinha(0, B, Px, Py, T).
+difShapeLinha(N, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
+								getTile(B, Px, P, T1), S1 is tileShape(T1),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, Px, P, T).
+difShapeLinha(N, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
+								getTile(B, Px, P, T1), S1 is tileShape(T1),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, Px, P, T).
+
+difShapeColuna(0, B, Px, Py, T).
+difShapeColuna(N, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
+								getTile(B, P, Py, T1), S1 is tileShape(T1),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, P, Py, T).
+difShapeColuna(N, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
+								getTile(B, P, Py, T1), S1 is tileShape(T1),
+								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, B, P, Py, T). 
+
+difShapes(N, B, Px, Py, T) :- difShapeColuna(N, B, Px, Py, T).
+difShapes(N, B, Px, Py, T) :- difShapeLinha(N, B, Px, Py, T).
+
+/* Same shapes in line or row */
+compareShapeEq(S, S1) :- S = S1.
+compareShapeEq(S, ' ').
+compareShapeEq(' ', S1).
+
+sameShapeLinha(0, B, Px, Py, T).
+sameShapeLinha(N, B, Px, Py, T) :- P is Py+1, S is tileShape(T),
+								getTile(B, Px, P, T1), S1 is tileShape(T1),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, Px, P, T).
+sameShapeLinha(N, B, Px, Py, T) :- P is Py-1, S is tileShape(T),
+								getTile(B, Px, P, T1), S1 is tileShape(T1),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, Px, P, T).
+
+sameShapeColuna(0, B, Px, Py, T).
+sameShapeColuna(N, B, Px, Py, T) :- P is Px+1, S is tileShape(T),
+								getTile(B, P, Py, T1), S1 is tileShape(T1),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, P, Py, T).
+sameShapeColuna(N, B, Px, Py, T) :- P is Px-1, S is tileShape(T),
+								getTile(B, P, Py, T1), S1 is tileShape(T1),
+								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, B, P, Py, T). 
+
+sameShapes(N, B, Px, Py, T) :- sameShapeColuna(N, B, Px, Py, T).
+sameShapes(N, B, Px, Py, T) :- sameShapeLinha(N, B, Px, Py, T).
 
 /* All possible valid moves */
 validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T).
 
 
 /* Load librarys */
@@ -187,6 +254,8 @@ logo :- write(' ________________________'), nl,
 		write('|          Q!NTO         |'), nl,
 		write('|________________________|'), nl, nl.
 
+start :- load, createBoard(5,5), nl, makeHand(5, []).
+
 menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
 			write('    ----- '), write('1. Play'), write(' -----'), nl, 
 			write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
@@ -194,5 +263,5 @@ menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write('
 			read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
-choice(1) :- load, createBoard(5,5), nl, makeHand(5, []).
+choice(1) :- start.
 choice(2) :- abort.
