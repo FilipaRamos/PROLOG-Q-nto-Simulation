@@ -83,17 +83,17 @@ randomShape(5, '&').
 randomShape(6, s).
 
 /* Generate Hand */
-randomHand(0).
+randomHand(0, L, L2, C).
 randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
 						delete(L, X, L4), C1 is C-1, 
-						append([X], L2, L3), N1 is N-1, randomHand(N1, L4, L3, C1).
+						append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
 
 
 /* Hand */
 /* makeHand(0, H) :- H = []. */
 /* N -> número de cartas da mão */
 /* L -> mão anterior */
-makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36), write(L).
+makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36).
 
 /* Display hand */
 displayHand(H) :- write(H).
@@ -151,6 +151,32 @@ expand_matrix_right([],[]).
 expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), append(L, [E], NL), expand_matrix_right(Matrix, NewMatrix).
 listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
+
+/* Get Tiles from the board */
+getTile(B, Px, Py, T) :- .
+
+/* Valid Moves */
+
+/* Different colors in line or row */
+difColorLinha(0, B, Px, Py, T).
+difColorLinha(N, B, Px, Py, T) :- P is Py+1, C is tileColor(T),
+							getTile(B, Px, P, T1), C1 is tileColor(T1),
+							\+ C = C1, N1 is N-1, difColorTile(N1, B, Px, P, T).
+
+difColorColuna(0, B, Px, Py, T).
+difColorColuna(N, B, Px, Py, T) :- P is Px+1, C is tileColor(T), 
+							getTile(B, P, Py, T1), C1 is tileColor(T1),
+							\+ C = C1, N1 is N-1, difColorColuna(N1, B, P, Py, T).
+
+difColors(N, B, Px, Py, T) :- difColorColuna(N, B, Px, Py, T).
+difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
+
+/* Different shapes in line or row */
+difShapeLinha().
+
+/* All possible valid moves */
+validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T).
+
 
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
