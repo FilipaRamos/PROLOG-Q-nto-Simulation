@@ -62,7 +62,7 @@ tileShape(tile(C, F)) :- F.
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
-makeDeck :- findall(T, oneTile(T), X). /*, imprimeDeck(0, X). */
+makeDeck(X) :- findall(T, oneTile(T), X). /*, imprimeDeck(0, X). */
 
 imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
 				writetile(X), N1 is N+1, imprimeDeck(N1, L).
@@ -82,18 +82,19 @@ randomShape(4, '+').
 randomShape(5, '&').
 randomShape(6, s).
 
+/* Generate Hand */
+randomHand(0).
+randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
+						delete(L, X, L4), C1 is C-1, 
+						append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
+
+
 /* Hand */
-hand([]).
-makeHand(N, D) :- randomHand(N, D, hand).
+makeHand(N) :- makeDeck(X), write(X), randomHand(N, X, [], 36).
 
 /* Display hand */
 displayHand([H|T]) :- write(H), write('   '), displayHand(T).
 displayTile(C,S) :- write(C), write(S), write(' | ').
-
-/* Generate Hand */
-randomHand(0).
-randomHand(N, L, L2) :- random(0, 34, R), nth0(R, L, X), delete(L, X, A),
-						append(L, L2, L2), N1 is N-1, randomHand(N1, L, L2).
 
 
 /*  A   B    C  D .... */
@@ -153,6 +154,9 @@ expand_matrix_right([],[]).
 expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), append(L, [E], NL), expand_matrix_right(Matrix, NewMatrix).
 listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
+
+/* Load librarys */
+load :- use_module(library(random)), use_module(library(lists)).
 
 /* menu */
 logo :- write(' ________________________'), nl,
