@@ -120,6 +120,12 @@ computerMove.
 /* User - Move Tile */ 
 numberTiles :- write("How many tiles do you want to play? "), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
 
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
+
+move(B, Px, Py, T, L) :- Pl is Px-1, L1 is L*Pl, Ic is L1+Py, I is Ic-1, replace(B, I, T, B2), write(B2).
+
 moveTile(0).
 moveTile(N) :- N > 0, write("Choose the tile to play. Color: "), 
 			read(C), write("Shape: "), read(S), write("Choose where to place it."),
