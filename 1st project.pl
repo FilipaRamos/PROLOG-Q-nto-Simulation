@@ -201,9 +201,11 @@ sameShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1),
 
 sameShapes(N, B, _Px, _Py, T) :- sameShapeColuna(N, B, _Px, _Py, T).
 sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T).
+sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T), sameShapeColuna(N, B, _Px, _Py, T).
+
 
 /* All possible valid moves */
-validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T), .
 validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T).
 validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T).
 validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T).
