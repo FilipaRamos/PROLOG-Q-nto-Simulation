@@ -102,8 +102,8 @@ tile(c, '&').
 tile(c, s).
 
 /* Auxiliary Functions */
-tileColor(tile(C, F), C).
-tileShape(tile(C, F), F).
+tileColor(tile(C, _F), C).
+tileShape(tile(_C, F), F).
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
@@ -113,7 +113,7 @@ imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X),
 				writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /* Generate Hand */
-randomHand(0, L, L2, C).
+randomHand(0, _L, _L2, _C).
 randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
 						delete(L, X, L4), C1 is C-1, 
 						append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
@@ -121,8 +121,8 @@ randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X),
 
 /* Hand */
 /* makeHand(0, H) :- H = []. */
-/* N -> número de cartas da mão */
-/* L -> mão anterior */
+/* N -> n�mero de cartas da m�o */
+/* L -> m�o anterior */
 makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36).
 
 /* Display hand */
@@ -155,8 +155,8 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 
 
 createMatrix(W, H, Matrix) :-   W2 is W, W1 is W//2, W2 > W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 > H1, listElement(Matrix,H2,L).
-createMatrix(W, H, Matrix) :- listElement(L,W1,tile(c,'!')). 
-createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). /* Cria Board/Matrix tudo com espaços vazios...*/
+createMatrix(_W, _H, _Matrix) :- listElement(_L,_W1,tile(c,'!')). 
+createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). /* Cria Board/Matrix tudo com espa�os vazios...*/
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
@@ -177,17 +177,17 @@ move(B, Px, Py, T, L) :- Pl is Px-1, L1 is L*Pl, Ic is L1+Py, I is Ic-1, replace
 
 moveTile(0).
 moveTile(N) :- N > 0, write("Choose the tile to play. Color: "), 
-			read(C), write("Shape: "), read(S), write("Choose where to place it."),
-			read(P), N1 is N-1, moveTile(N1).
+			read(_C), write("Shape: "), read(_S), write("Choose where to place it."),
+			read(_P), N1 is N-1, moveTile(N1).
 			
 /* Set list element to Elem*/
 list_get(L, Index, Elem) :- nth0(Index, L, Elem). /* retorna index a alterar*/
-list_set([], 0, Elem, [NH|NT]).
-list_set([H|T], Index, Elem, [NH|NT]) :- list_get(L, Index, Elem), Index > -1, N1 is Index-1, list_set(T, N1,Elem, NT). 
-list_set(L, , _, L).
+list_set([], 0, _Elem, [_NH|_NT]).
+list_set([_H|T], Index, Elem, [_NH|NT]) :- list_get(_L, Index, Elem), Index > -1, N1 is Index-1, list_set(T, N1,Elem, NT). 
+list_set(L, _, _, L).
 
 /*Set matrix element to Elem in position Px, Py*/
-matrix_set(Matrix, Px, Py, Elem, NewMatrix) :- list_get(Matrix, Py, L),  list_set(L, Px, Elem, L2), list_set(Matrix, Y, L2, NewMatrix).
+matrix_set(Matrix, Px, Py, Elem, NewMatrix) :- list_get(Matrix, Py, L),  list_set(L, Px, Elem, L2), list_set(Matrix, _Y, L2, NewMatrix).
 
 
 /*expand matrix*/
@@ -209,18 +209,18 @@ getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
 /* Different colors in line or row */
 compareColor(C, C1) :- \+ C = C1.
-compareColor(C, ' ').
-compareColor(' ', C).
+compareColor(_C, ' ').
+compareColor(' ', _C).
 
-difColorLinha(0, B, Px, Py, T).
+difColorLinha(0, _B, _Px, _Py, _T).
 difColorLinha(N, B, Px, Py, T) :- P is Py+1, tileColor(T, C),
 							getTile(B, Px, P, T1), tileColor(T1, C1),
 							compareColor(C, C1), N1 is N-1, difColorLinha(N1, B, Px, P, T).
-difColorLinha(N, B, Px, Py, T) :- P0 is Py-1, tileColor(T, C),
+difColorLinha(N, B, Px, Py, T) :- _P0 is Py-1, tileColor(T, C),
 							getTile(B, Px, P, T1), tileColor(T1, C1),
 							compareColor(C, C1), N1 is N-1, difColorLinha(N1, B, Px, P, T).
 
-difColorColuna(0, B, Px, Py, T).
+difColorColuna(0, _B, _Px, _Py, _T).
 difColorColuna(N, B, Px, Py, T) :- P is Px+1, tileColor(T, C), 
 							getTile(B, P, Py, T1), tileColor(T1, C1),
 							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
@@ -233,18 +233,18 @@ difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
 
 /* Same colors in line or row */
 compareColorEq(C, C1) :- C = C1.
-compareColorEq(C, ' ').
-compareColorEq(' ', C).
+compareColorEq(_C, ' ').
+compareColorEq(' ', _C).
 
-sameColorLinha(0, L, B, Px, Py, T).
+sameColorLinha(0, _L, _B, _Px, _Py, _T).
 sameColorLinha(N, L, B, Px, Py, T) :- P is Py+1, tileColor(T, C),
 							getTile(B, Px, P, T1), tileColor(T1, C1),
 							compareColorEq(C, C1), N1 is N-1, sameColorLinha(N1, L, B, Px, P, T).
-sameColorLinha(N, L, B, Px, Py, T) :- P0 is Py-1, tileColor(T, C),
+sameColorLinha(N, L, B, Px, Py, T) :- _P0 is Py-1, tileColor(T, C),
 							getTile(B, Px, P, T1), tileColor(T1, C1),
 							compareColorEq(C, C1), N1 is N-1, sameColorLinha(N1, L, B, Px, P, T).
 
-sameColorColuna(0, L, B, Px, Py, T).
+sameColorColuna(0, _L, _B, _Px, _Py, _T).
 sameColorColuna(N, L, B, Px, Py, T) :- P is Px+1, tileColor(T, C), 
 							getTile(B, P, Py, T1), tileColor(T1, C1),
 							compareColorEq(C, C1), N1 is N-1, sameColorColuna(N1, L, B, P, Py, T).
@@ -257,10 +257,10 @@ sameColors(N, L, B, Px, Py, T) :- sameColorLinha(N, L, B, Px, Py, T).
 
 /* Different shapes in line or row */
 compareShape(S, S1) :- \+ S = S1.
-compareShape(S, ' ').
-compareShape(' ', S1).
+compareShape(_S, ' ').
+compareShape(' ', _S1).
 
-difShapeLinha(0, L, B, Px, Py, T).
+difShapeLinha(0, _L, _B, _Px, _Py, _T).
 difShapeLinha(N, L, B, Px, Py, T) :- P is Py+1, tileShape(T, S),
 								getTile(B, Px, P, T1), tileShape(T1, S1),
 								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, Px, P, T).
@@ -268,7 +268,7 @@ difShapeLinha(N, L, B, Px, Py, T) :- P is Py-1, tileShape(T, S),
 								getTile(B, Px, P, T1), tileShape(T1, S1),
 								compareShape(S, S1), N1 is N-1, difShapeLinha(N1, L, B, Px, P, T).
 
-difShapeColuna(0, L, B, Px, Py, T).
+difShapeColuna(0, _L, _B, _Px, _Py, _T).
 difShapeColuna(N, L, B, Px, Py, T) :- P is Px+1, tileShape(T, S),
 								getTile(B, P, Py, T1), tileShape(T1, S1),
 								compareShape(S, S1), N1 is N-1, difShapeColuna(N1, L, B, P, Py, T).
@@ -281,10 +281,10 @@ difShapes(N, L, B, Px, Py, T) :- difShapeLinha(N, L, B, Px, Py, T).
 
 /* Same shapes in line or row */
 compareShapeEq(S, S1) :- S = S1.
-compareShapeEq(S, ' ').
-compareShapeEq(' ', S1).
+compareShapeEq(_S, ' ').
+compareShapeEq(' ', _S1).
 
-sameShapeLinha(0, L, B, Px, Py, T).
+sameShapeLinha(0, _L, _B, _Px, _Py, _T).
 sameShapeLinha(N, L, B, Px, Py, T) :- P is Py+1, tileShape(T, S),
 								getTile(B, Px, P, T1), tileShape(T1, S1),
 								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, Px, P, T).
@@ -292,7 +292,7 @@ sameShapeLinha(N, L, B, Px, Py, T) :- P is Py-1, tileShape(T, S),
 								getTile(B, Px, P, T1), tileShape(T1, S1),
 								compareShapeEq(S, S1), N1 is N-1, sameShapeLinha(N1, L, B, Px, P, T).
 
-sameShapeColuna(0, L, B, Px, Py, T).
+sameShapeColuna(0, _L, _B, _Px, _Py, _T).
 sameShapeColuna(N, L, B, Px, Py, T) :- P is Px+1, tileShape(T, S),
 								getTile(B, P, Py, T1), tileShape(T1, S1),
 								compareShapeEq(S, S1), N1 is N-1, sameShapeColuna(N1, L, B, P, Py, T).
