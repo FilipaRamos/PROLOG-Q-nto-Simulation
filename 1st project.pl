@@ -23,84 +23,6 @@ oneTile(X) :- color(C), shape(F), X = tile(C,F).
 tile(' ',' ').
 tile(C, F) :- color(C), shape(F).
 
-/* Possible Normal Tiles */
-tile(r, '*').
-tile(r, '!').
-tile(r, '#').
-tile(r, '+').
-tile(r, '&').
-
-tile(b, '*').
-tile(b, '!').
-tile(b, '#').
-tile(b, '+').
-tile(b, '&').
-
-tile(g, '*').
-tile(g, '!').
-tile(g, '#').
-tile(g, '+').
-tile(g, '&').
-
-tile(y, '*').
-tile(y, '!').
-tile(y, '#').
-tile(y, '+').
-tile(y, '&').
-
-tile(c, '*').
-tile(c, '!').
-tile(c, '#').
-tile(c, '+').
-tile(c, '&').
-
-/* Possible Special Tiles */
-
-tile(r, s).
-tile(r, s).
-tile(r, s).
-tile(r, s).
-tile(r, s).
-
-tile(b, s).
-tile(b, s).
-tile(b, s).
-tile(b, s).
-tile(b, s).
-
-tile(g, s).
-tile(g, s).
-tile(g, s).
-tile(g, s).
-tile(g, s).
-
-tile(y, s).
-tile(y, s).
-tile(y, s).
-tile(y, s).
-tile(y, s).
-
-tile(c, s).
-tile(c, s).
-tile(c, s).
-tile(c, s).
-tile(c, s).
-
-tile(' ', s).
-tile(' ', s).
-tile(' ', s).
-tile(' ', s).
-tile(' ', s).
-
-
-tile(c, '*').
-tile(c, '!').
-tile(c, '#').
-tile(c, '+').
-tile(c, '&').
-
-tile(c, s).
-
 /* Auxiliary Functions */
 tileColor(tile(C, _F), C).
 tileShape(tile(_C, F), F).
@@ -121,8 +43,8 @@ randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X),
 
 /* Hand */
 /* makeHand(0, H) :- H = []. */
-/* N -> n�mero de cartas da m�o */
-/* L -> m�o anterior */
+/* N -> número de cartas da mão */
+/* L -> mão anterior */
 makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36).
 
 /* Display hand */
