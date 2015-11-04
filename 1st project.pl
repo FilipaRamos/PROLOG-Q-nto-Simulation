@@ -57,8 +57,8 @@ tile(c, '&').
 /* Possible Special Tiles */
 
 /* Auxiliary Functions */
-tileColor(tile(C, F), Xc) :- Xc is C.
-tileShape(tile(C, F), Xs) :- Xs is F.
+tileColor(tile(C, F), C).
+tileShape(tile(C, F), F).
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 
 /* Existent Tiles */
