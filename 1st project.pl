@@ -7,7 +7,7 @@ color(b).
 color(g).
 color(y).
 color(c).
-color(clr).
+color(' ').
 
 /* represents the possible shapes */
 shape('*').
@@ -32,13 +32,13 @@ writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 makeDeck(X) :- findall(T, oneTile(T), X).
 
 imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
-				writetile(X), N1 is N+1, imprimeDeck(N1, L).
+                                writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /* Generate Hand */
 randomHand(0, _L, _L2, _C).
 randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
-						delete(L, X, L4), C1 is C-1, 
-						append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
+                                                delete(L, X, L4), C1 is C-1, 
+                                                append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
 
 
 /* Hand */
@@ -73,13 +73,12 @@ displayBoardaux([L1], C) :-  write(C) ,write(' '), length(L1,N1), sHorizontalLin
 displayBoardaux([L1|R], C) :- R \= [], length(L1,N1), C < N1, C2 is C+1, write(C), write(' '), sHorizontalLine(N1, L1), write(' '), write(C), nl, write('  '), tHorizontalLine(N1), nl, displayBoardaux(R, C2).
 
 displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,write('  '), fHorizontalLine(N1), nl,
-						displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), nl, write('  '), fguideLine(N1, 0), nl.
+                                                displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), nl, write('  '), fguideLine(N1, 0), nl.
 
 
-createMatrix(W, H, Matrix) :-   W2 is W, W1 is W//2, W2 > W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 > H1, listElement(Matrix,H2,L).
-createMatrix(_W, _H, _Matrix) :- listElement(_L,_W1,tile(c,'!')). 
-createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). 
-/* Cria Board Matrix tudo com espaços vazios...*/
+/* Lista de Listas..Cria Board Matrix tudo com espaços vazios...*/
+createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
+
 
 
 /* Computer - Move Tile */
@@ -94,13 +93,13 @@ replace(L, _, _, L).
 
 
 move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1), 
-						P is Px-1, replace(B, P, B1, Bnew).
+                                                P is Px-1, replace(B, P, B1, Bnew).
 
 
 moveTile(_C, _S, _Px, _Py) :- write('Choose the tile to play. Color: '), 
-			read(_C), write('Shape: '), read(_S), write('Choose where to place it. Number? '),
-			read(_Px), write('Letter ?'), read(_Py).
-			
+                        read(_C), write('Shape: '), read(_S), write('Choose where to place it. Number? '),
+                        read(_Px), write('Letter ?'), read(_Py).
+                        
 
 /*Main*/
 randomCentre(T) :- makeDeck(L), length(L,N), random(0, N, Num), nth0(Num, L, T).
@@ -140,13 +139,13 @@ compareColor(' ', _C).
 
 difColorLinha(0, _B, _Px, _T).
 difColorLinha(N, B, Px, T) :- tileColor(T, C), getTile(B, Px, N, T1), 
-							tileColor(T1, C1), compareColor(C, C1),
-							N1 is N-1, difColorLinha(N1, B, Px, T).
+                                                        tileColor(T1, C1), compareColor(C, C1),
+                                                        N1 is N-1, difColorLinha(N1, B, Px, T).
 
 difColorColuna(0, _B, _Py, _T).
 difColorColuna(N, B, Py, T) :- tileColor(T, C), getTile(B, N, Py, T1), 
-							tileColor(T1, C1), compareColor(C, C1), 
-							N1 is N-1, difColorColuna(N1, B, Py, T).
+                                                        tileColor(T1, C1), compareColor(C, C1), 
+                                                        N1 is N-1, difColorColuna(N1, B, Py, T).
 
 difColors(N, B, _Px, _Py, T) :- difColorColuna(N, B, _Py, T).
 difColors(N, B, _Px, _Py, T) :- difColorLinha(N, B, _Px, T).
@@ -158,13 +157,13 @@ compareColorEq(' ', _C).
 
 sameColorLinha(0, _B, _Px, _T).
 sameColorLinha(N, B, Px, T) :- tileColor(T, C), getTile(B, Px, N, T1), 
-							tileColor(T1, C1), compareColorEq(C, C1), 
-							N1 is N-1, sameColorLinha(N1, B, Px, T).
+                                                        tileColor(T1, C1), compareColorEq(C, C1), 
+                                                        N1 is N-1, sameColorLinha(N1, B, Px, T).
 
 sameColorColuna(0, _B, _Py, _T).
 sameColorColuna(N, B, Py, T) :- tileColor(T, C),  getTile(B, N, Py, T1), 
-							tileColor(T1, C1), compareColorEq(C, C1), 
-							N1 is N-1, sameColorColuna(N1, B, Py, T).
+                                                        tileColor(T1, C1), compareColorEq(C, C1), 
+                                                        N1 is N-1, sameColorColuna(N1, B, Py, T).
 
 sameColors(N, B, _Px, _Py, T) :- sameColorColuna(N, B, _Py, T).
 sameColors(N, B, _Px, _Py, T) :- sameColorLinha(N, B, _Px, T).
@@ -176,13 +175,13 @@ compareShape(' ', _S1).
 
 difShapeLinha(0, _B, _Px, _T).
 difShapeLinha(N, B, Px, T) :- tileShape(T, S), getTile(B, Px, N, T1), 
-								tileShape(T1, S1), compareShape(S, S1), 
-								N1 is N-1, difShapeLinha(N1, B, Px, T).
+                                                                tileShape(T1, S1), compareShape(S, S1), 
+                                                                N1 is N-1, difShapeLinha(N1, B, Px, T).
 
 difShapeColuna(0, _B, _Py, _T).
 difShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1), 
-								tileShape(T1, S1), compareShape(S, S1), 
-								N1 is N-1, difShapeColuna(N1, B, Py, T). 
+                                                                tileShape(T1, S1), compareShape(S, S1), 
+                                                                N1 is N-1, difShapeColuna(N1, B, Py, T). 
 
 difShapes(N, B, _Px, _Py, T) :- difShapeColuna(N, B, _Py, T).
 difShapes(N, B, _Px, _Py, T) :- difShapeLinha(N, B, _Px, T).
@@ -194,13 +193,13 @@ compareShapeEq(' ', _S1).
 
 sameShapeLinha(0, _B, _Px, _T).
 sameShapeLinha(N, B, Px, T) :- tileShape(T, S), getTile(B, Px, N, T1), 
-								tileShape(T1, S1), compareShapeEq(S, S1), 
-								N1 is N-1, sameShapeLinha(N1, B, Px, T).
+                                                                tileShape(T1, S1), compareShapeEq(S, S1), 
+                                                                N1 is N-1, sameShapeLinha(N1, B, Px, T).
 
 sameShapeColuna(0, _B, _Py, _T).
 sameShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1), 
-								tileShape(T1, S1), compareShapeEq(S, S1), 
-								N1 is N-1, sameShapeColuna(N1, B, Py, T).
+                                                                tileShape(T1, S1), compareShapeEq(S, S1), 
+                                                                N1 is N-1, sameShapeColuna(N1, B, Py, T).
 
 sameShapes(N, B, _Px, _Py, T) :- sameShapeColuna(N, B, _Px, _Py, T).
 sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T).
@@ -208,10 +207,10 @@ sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T), sameShapeCol
 
 
 /* All possible valid moves */
-validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T), .
-validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T), sameShapes(N, B, Px,Py,T) .
+validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T), difShapes(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T), difColors(N, B, Px, Py, T).
+validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, Py, T).
 
 
 /* Load librarys */
@@ -219,17 +218,17 @@ load :- use_module(library(random)), use_module(library(lists)).
 
 /* menu */
 logo :- write(' ________________________'), nl,
-		write('|                        |'), nl,
-		write('|          Q!NTO         |'), nl,
-		write('|________________________|'), nl, nl.
+                write('|                        |'), nl,
+                write('|          Q!NTO         |'), nl,
+                write('|________________________|'), nl, nl.
 
-start :- load, createBoard(5,5), nl, makeHand(5, []).
+start :- load, createBoard(6,6), nl, makeHand(5, []).
 
 menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
-			write('    ----- '), write('1. Play'), write(' -----'), nl, 
-			write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
-			write('Write the number of the option followed by a dot.'), nl,
-			read(C), C>0, C=<2, number(C), choice(C).
+                        write('    ----- '), write('1. Play'), write(' -----'), nl, 
+                        write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
+                        write('Write the number of the option followed by a dot.'), nl,
+                        read(C), C>0, C=<2, number(C), choice(C).
 
 /* Menu Options */
 choice(1) :- start.
