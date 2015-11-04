@@ -135,24 +135,18 @@ compareColor(C, C1) :- \+ C = C1.
 compareColor(_C, ' ').
 compareColor(' ', _C).
 
-difColorLinha(0, _B, _Px, _Py, _T).
-difColorLinha(N, B, Px, Py, T) :- P is Py+1, tileColor(T, C),
-							getTile(B, Px, P, T1), tileColor(T1, C1),
-							compareColor(C, C1), N1 is N-1, difColorLinha(N1, B, Px, P, T).
-difColorLinha(N, B, Px, Py, T) :- _P0 is Py-1, tileColor(T, C),
-							getTile(B, Px, P, T1), tileColor(T1, C1),
-							compareColor(C, C1), N1 is N-1, difColorLinha(N1, B, Px, P, T).
+difColorLinha(0, _B, _Px, _T).
+difColorLinha(N, B, Px, T) :- tileColor(T, C), getTile(B, Px, N, T1), 
+							tileColor(T1, C1), compareColor(C, C1),
+							N1 is N-1, difColorLinha(N1, B, Px, T).
 
-difColorColuna(0, _B, _Px, _Py, _T).
-difColorColuna(N, B, Px, Py, T) :- P is Px+1, tileColor(T, C), 
-							getTile(B, P, Py, T1), tileColor(T1, C1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
-difColorColuna(N, B, Px, Py, T) :- P is Px-1, tileColor(T, C), 
-							getTile(B, P, Py, T1), tileColor(T1, C1),
-							compareColor(C, C1), N1 is N-1, difColorColuna(N1, B, P, Py, T).
+difColorColuna(0, _B, _Py, _T).
+difColorColuna(N, B, Py, T) :- tileColor(T, C), getTile(B, N, Py, T1), 
+							tileColor(T1, C1), compareColor(C, C1), 
+							N1 is N-1, difColorColuna(N1, B, Py, T).
 
-difColors(N, B, Px, Py, T) :- difColorColuna(N, B, Px, Py, T).
-difColors(N, B, Px, Py, T) :- difColorLinha(N, B, Px, Py, T).
+difColors(N, B, _Px, _Py, T) :- difColorColuna(N, B, _Py, T).
+difColors(N, B, _Px, _Py, T) :- difColorLinha(N, B, _Px, T).
 
 /* Same colors in line or row */
 compareColorEq(C, C1) :- C = C1.
