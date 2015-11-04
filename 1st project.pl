@@ -81,8 +81,6 @@ createMatrix(_W, _H, _Matrix) :- listElement(_L,_W1,tile(c,'!')).
 createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). 
 /* Cria Board Matrix tudo com espaços vazios...*/
 
-/*Main*/
-createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
 
 /* Computer - Move Tile */
 computerMove.
@@ -103,6 +101,11 @@ moveTile(_C, _S, _Px, _Py) :- write('Choose the tile to play. Color: '),
 			read(_C), write('Shape: '), read(_S), write('Choose where to place it. Number? '),
 			read(_Px), write('Letter ?'), read(_Py).
 			
+
+/*Main*/
+randomCentre(T) :- makeDeck(L), length(L,N), random(0, N, Num), nth0(Num, L, T).
+createBoard(W,H) :- repeat, createMatrix(W,H, B), W1 is W//2, H1 is H//2, randomCentre(T), move(B, H1, W1, T, Bnew), displayBoard(Bnew).
+
 /* Set list element to Elem*/
 list_get(L, Index, Elem) :- nth0(Index, L, Elem). /* retorna index a alterar*/
 list_set([], 0, _Elem, [_NH|_NT]).
