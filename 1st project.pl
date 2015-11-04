@@ -88,7 +88,7 @@ createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
 computerMove.
 
 /* User - Move Tile */ 
-numberTiles :- write("How many tiles do you want to play? "), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
+numberTiles :- write('How many tiles do you want to play? '), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
@@ -99,10 +99,9 @@ move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),
 						P is Px-1, replace(B, P, B1, Bnew).
 
 
-moveTile(0).
-moveTile(N) :- N > 0, write("Choose the tile to play. Color: "), 
-			read(_C), write("Shape: "), read(_S), write("Choose where to place it."),
-			read(_P), N1 is N-1, moveTile(N1).
+moveTile(_C, _S, _Px, _Py) :- write('Choose the tile to play. Color: '), 
+			read(_C), write('Shape: '), read(_S), write('Choose where to place it. Number? '),
+			read(_Px), write('Letter ?'), read(_Py).
 			
 /* Set list element to Elem*/
 list_get(L, Index, Elem) :- nth0(Index, L, Elem). /* retorna index a alterar*/
