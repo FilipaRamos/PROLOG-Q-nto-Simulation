@@ -56,6 +56,51 @@ tile(c, '&').
 
 /* Possible Special Tiles */
 
+tile(r, s).
+tile(r, s).
+tile(r, s).
+tile(r, s).
+tile(r, s).
+
+tile(b, s).
+tile(b, s).
+tile(b, s).
+tile(b, s).
+tile(b, s).
+
+tile(g, s).
+tile(g, s).
+tile(g, s).
+tile(g, s).
+tile(g, s).
+
+tile(y, s).
+tile(y, s).
+tile(y, s).
+tile(y, s).
+tile(y, s).
+
+tile(c, s).
+tile(c, s).
+tile(c, s).
+tile(c, s).
+tile(c, s).
+
+tile(' ', s).
+tile(' ', s).
+tile(' ', s).
+tile(' ', s).
+tile(' ', s).
+
+
+tile(c, '*').
+tile(c, '!').
+tile(c, '#').
+tile(c, '+').
+tile(c, '&').
+
+tile(c, s).
+
 /* Auxiliary Functions */
 tileColor(tile(C, F)) :- C.
 tileShape(tile(C, F)) :- F.
@@ -109,7 +154,9 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 						displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), nl, write('  '), fguideLine(N1, 0), nl.
 
 
-createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
+createMatrix(W, H, Matrix) :-   W2 is W, W1 is W//2, W2 > W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 > H1, listElement(Matrix,H2,L).
+createMatrix(W, H, Matrix) :- listElement(L,W1,tile(c,'!')). 
+createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). /* Cria Board/Matrix tudo com espaços vazios...*/
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
@@ -120,10 +167,26 @@ computerMove.
 /* User - Move Tile */ 
 numberTiles :- write("How many tiles do you want to play? "), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
 
+replace([_|T], 0, X, [X|T]).
+replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
+replace(L, _, _, L).
+
+move(B, Px, Py, T, L) :- Pl is Px-1, L1 is L*Pl, Ic is L1+Py, I is Ic-1 replace(B, I, T, B2), write(B2).
+
 moveTile(0).
 moveTile(N) :- N > 0, write("Choose the tile to play. Color: "), 
 			read(C), write("Shape: "), read(S), write("Choose where to place it."),
 			read(P), N1 is N-1, moveTile(N1).
+			
+/* Set list element to Elem*/
+list_get(L, Index, Elem) :- nth0(Index, L, Elem). /* retorna index a alterar*/
+list_set([], 0, Elem, [NH|NT]).
+list_set([H|T], Index, Elem, [NH|NT]) :- list_get(L, Index, Elem), Index > -1, N1 is Index-1, list_set(T, N1,Elem, NT). 
+list_set(L, , _, L).
+
+/*Set matrix element to Elem in position Px, Py*/
+matrix_set(Matrix, Px, Py, Elem, NewMatrix) :- list_get(Matrix, Py, L),  list_set(L, Px, Elem, L2), list_set(Matrix, Y, L2, NewMatrix).
+
 
 /*expand matrix*/
 
