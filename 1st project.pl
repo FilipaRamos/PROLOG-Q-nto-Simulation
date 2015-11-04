@@ -78,7 +78,8 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 
 createMatrix(W, H, Matrix) :-   W2 is W, W1 is W//2, W2 > W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 > H1, listElement(Matrix,H2,L).
 createMatrix(_W, _H, _Matrix) :- listElement(_L,_W1,tile(c,'!')). 
-createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). /* Cria Board/Matrix tudo com espa�os vazios...*/
+createMatrix(W, H, Matrix) :- W2 is W, W1 is W//2, W2 < W1, listElement(L,W2,tile(' ',' ')), H2 is H, H1 is H//2, H2 < H1, listElement(Matrix,H2,L). 
+/* Cria Board Matrix tudo com espaços vazios...*/
 
 /*Main*/
 createBoard(W,H) :- repeat, createMatrix(W,H, B), displayBoard(B).
@@ -94,7 +95,8 @@ replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
 
-move(B, Px, Py, T, L) :- Pl is Px-1, L1 is L*Pl, Ic is L1+Py, I is Ic-1, replace(B, I, T, B2), write(B2).
+move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1), 
+						P is Px-1, replace(B, P, B1, Bnew).
 
 
 moveTile(0).
