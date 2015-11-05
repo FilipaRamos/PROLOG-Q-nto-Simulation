@@ -31,22 +31,21 @@ writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 /* Existent Tiles */
 makeDeck(X) :- findall(T, oneTile(T), X).
 
-imprimeDeck(N, L) :- nth0(N, L, X), writetile(X), 
-				N1 is N+1, imprimeDeck(N1, L).
+imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
+                                writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /* Generate Hand */
 randomHand(0, _L, _L2, _C).
 randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
-                        delete(L, X, L4), C1 is C-1, 
-                        append([X], L2, L3), N1 is N-1, 
-                        write(L3), randomHand(N1, L4, L3, C1).
+                                                delete(L, X, L4), C1 is C-1, 
+                                                append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
 
 
 /* Hand */
 /* makeHand(0, H) :- H = []. */
-/* N -> número de cartas que faltam na mão */
+/* N -> número de cartas da mão */
 /* L -> mão anterior */
-makeHand(N, L, H) :- makeDeck(X), randomHand(N, X, L, 36).
+makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36).
 
 /* Display hand */
 displayHand(H) :- write(H).
@@ -97,9 +96,9 @@ move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),
                                                 P is Px-1, replace(B, P, B1, Bnew).
 
 
-moveTile(_C, _S, _Px, _Py) :- write('Choose the tile to play. Color: '), 
-                        read(_C), write('Shape: '), read(_S), write('Choose where to place it. Number? '),
-                        read(_Px), write('Letter ?'), read(_Py).
+moveTile(C, S, Px, Py) :- write('Choose the tile to play. Color: '), 
+                        read(C), write('Shape: '), read(S), write('Choose where to place it. Number? '),
+                        read(Px), write('Letter ?'), read(Py).
                         
 
 /*Main*/
@@ -149,8 +148,8 @@ difColorColuna(N, B, Py, T) :- tileColor(T, C), getTile(B, N, Py, T1),
                                                         tileColor(T1, C1), compareColor(C, C1), 
                                                         N1 is N-1, difColorColuna(N1, B, Py, T).
 
-difColors(N, B, _Px, _Py, T) :- difColorColuna(N, B, _Py, T).
-difColors(N, B, _Px, _Py, T) :- difColorLinha(N, B, _Px, T).
+difColors(N, B, _Px, Py, T) :- difColorColuna(N, B, Py, T).
+difColors(N, B, Px, _Py, T) :- difColorLinha(N, B, Px, T).
 
 /* Same colors in line or row */
 compareColorEq(C, C1) :- C = C1.
@@ -167,8 +166,8 @@ sameColorColuna(N, B, Py, T) :- tileColor(T, C),  getTile(B, N, Py, T1),
                                                         tileColor(T1, C1), compareColorEq(C, C1), 
                                                         N1 is N-1, sameColorColuna(N1, B, Py, T).
 
-sameColors(N, B, _Px, _Py, T) :- sameColorColuna(N, B, _Py, T).
-sameColors(N, B, _Px, _Py, T) :- sameColorLinha(N, B, _Px, T).
+sameColors(N, B, _Px, Py, T) :- sameColorColuna(N, B, Py, T).
+sameColors(N, B, Px, _Py, T) :- sameColorLinha(N, B, Px, T).
 
 /* Different shapes in line or row */
 compareShape(S, S1) :- \+ S = S1.
@@ -185,8 +184,8 @@ difShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1),
                                                                 tileShape(T1, S1), compareShape(S, S1), 
                                                                 N1 is N-1, difShapeColuna(N1, B, Py, T). 
 
-difShapes(N, B, _Px, _Py, T) :- difShapeColuna(N, B, _Py, T).
-difShapes(N, B, _Px, _Py, T) :- difShapeLinha(N, B, _Px, T).
+difShapes(N, B, _Px, Py, T) :- difShapeColuna(N, B, Py, T).
+difShapes(N, B, Px, _Py, T) :- difShapeLinha(N, B, Px, T).
 
 /* Same shapes in line or row */
 compareShapeEq(S, S1) :- S = S1.
@@ -203,9 +202,9 @@ sameShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1),
                                                                 tileShape(T1, S1), compareShapeEq(S, S1), 
                                                                 N1 is N-1, sameShapeColuna(N1, B, Py, T).
 
-sameShapes(N, B, _Px, _Py, T) :- sameShapeColuna(N, B, _Px, _Py, T).
-sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T).
-sameShapes(N, B, _Px, _Py, T) :- sameShapeLinha(N, B, _Px, _Py, T), sameShapeColuna(N, B, _Px, _Py, T).
+sameShapes(N, B, _Px, Py, T) :- sameShapeColuna(N, B, Py, T).
+sameShapes(N, B, Px, _Py, T) :- sameShapeLinha(N, B, Px, T).
+sameShapes(N, B, Px, Py, T) :- sameShapeLinha(N, B, Px, T), sameShapeColuna(N, B, Py, T).
 
 
 /* All possible valid moves */
@@ -289,8 +288,6 @@ get_best_move(B, Hand,L) :- best_Mov(B,[_P,_X,_Y|_T], Hand, _Pont, [_BestH|_Best
 /*Applies a List of moves*/
 apply_moves(NewBoard, [], NewBoard).
 apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), apply_moves(NB,TM, NewBoard).
-
-
 
 
 
