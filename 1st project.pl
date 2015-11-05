@@ -303,7 +303,7 @@ logo :- write(' ________________________'), nl,
                 write('|          Q!NTO         |'), nl,
                 write('|________________________|'), nl, nl.
 
-start :- load, createBoard(5,5), nl, makeHand(5, []).
+start :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, []).
 
 menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
                         write('    ----- '), write('1. Play'), write(' -----'), nl, 
