@@ -103,7 +103,8 @@ moveTile(_C, _S, _Px, _Py) :- write('Choose the tile to play. Color: '),
 
 /*Main*/
 randomCentre(T) :- makeDeck(L), length(L,N), random(0, N, Num), nth0(Num, L, T).
-createBoard(W,H) :- repeat, createMatrix(W,H, B), W1 is W//2, H1 is H//2, randomCentre(T), move(B, H1, W1, T, Bnew), displayBoard(Bnew).
+createBoard(W,H, Bnew) :- repeat, createMatrix(W,H, B), W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T), move(B, H2, W2, T, Bnew).
+                                                                                          
 
 /* Set list element to Elem*/
 list_get(L, Index, Elem) :- nth0(Index, L, Elem). /* retorna index a alterar*/
@@ -212,6 +213,85 @@ validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T), difShapes(N, B, Px, P
 validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T), difColors(N, B, Px, Py, T).
 validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, Py, T).
 
+/*BOT*/
+
+/*Verifies is a Given Tile belongs to the Hand*/
+inHand([], _Hand).
+inHand([H|T], Hand) :- member(H, Hand), inHand(T, Hand). 
+
+
+/* FUNCOES DE VALID ERA A IDEIA QUE TIVE ONTEM, MAS ALTERA AS TUAS QUE DEPOIS ALTERO O MEU BOT... ESTAS NÃO ESTAO TESTADAS... */
+
+/*Dir pode ser 01- UP 0-1- DOWN 10- LEFT -10- RIGHT */
+validMovAux(B, [X,Y], _D, _T, [],[],[]) :- \+((length(B, H), nth0(0, B, L), length(L, W) , X>=0, X < W, Y>=0, Y<H)), !.
+validMovAux(B, [X,Y], _D, _T, [],[],[]) :- getTile(B, X, Y, Tile), Tile = tile(' ', ' '), !.
+
+validMovAux(B, [X,Y], [DirX,DirY], T, [[X, Y]|Tseen], [S|LS], [C|LC]) :- member([X,Y], T),!, getTile(B, X, Y, Tile), Tile = tile(C, S),
+                                                                         NextX is X + DirX,
+                                                                         NextY is Y + DirY,
+                                                                         validMovAux(B, [NextX,NextY], [DirX,DirY], T, Tseen, LS, LC).
+validMovAux(B, [X,Y], [DirX,DirY], T, Tseen, [S|LS], [C|LC]) :- getTile(B, X, Y, Tile), Tile = tile(C, S),
+                                                                         NextX is X + DirX,
+                                                                         NextY is Y + DirY,
+                                                                         validMovAux(B, [NextX,NextY], [DirX,DirY], T, Tseen, LS, LC).
+
+
+/*Tests if a Move is valid or not, if it isnt returns a valid one...*/
+
+validMov(B,[H|T], Hand, Pont) :- H = [P,X,Y], 
+        inHand(P, Hand),
+        validMovAux(B, [X,Y], [1,0] ,T, Tseen1, LS1, LC1),
+        X1 is X - 1,
+        validMovAux(B, [X1,Y], [-1,0],T, Tseen2, LS2, LC2),
+        append(Tseen1, Tseen2, Tseen),
+        Tseen = T,
+        append(LS1, LS2, LS), 
+        append(LC1, LC2, LC),
+        all_same_or_different(LS),
+        all_same_or_different(LC), 
+        length(LS, N),
+        if(N mod 5 =:= 0, Pont is N *2, Pont is N ).
+
+validMov(B,[H|T], Hand, Pont) :- H = [P,X,Y],
+        inHand(P, Hand),
+        validMovAux(B, [X,Y], [0,1] ,T, Tseen3, LS3, LC3),
+        Y1 is Y - 1,
+        validMovAux(B, [X,Y1], [0,-1] ,T, Tseen4, LS4, LC4),
+        append(Tseen3, Tseen4, Tseen),
+        Tseen = T,
+        append(LS3, LS4, LS),
+        append(LC3, LC4, LC),
+        all_same_or_different(LS),
+        all_same_or_different(LC),
+        length(LC, N),
+        Pont is N.
+
+/*Tests if in a given List are either all the same or all different*/
+all_same_or_different(L):- all_same( L ), !.
+all_same_or_different(L):- all_different( L ), !.
+all_different([]).
+all_different([H|T]):- \+member(H, T), all_different( T ).
+all_same([H|T]):- length(T,N), listElement(T, N, H).
+
+
+/*returns all valid moves...*/
+grtAllValidMoves(B,[P,X,Y|T], Hand, Pont, L) :- findall([P,X,Y],validMov(B,[P,X,Y|T], Hand, Pont), L).
+
+best_Mov(B,[P,X,Y|T], Hand, Pont, [BestH|BestT], NewBest) :- grtAllValidMoves(B,[P,X,Y|T], Hand, Pont, [BestH|BestT]), 
+                                                    length(BestH, N1), legnth(NewBest, N2), N1 > N2, NewBest = BestH,  
+                                                    best_Mov(B,[P,X,Y|T], Hand, Pont, BestT, NewBest).
+
+
+get_best_move(B, Hand,L) :- best_Mov(B,[_P,_X,_Y|_T], Hand, _Pont, [_BestH|_BestT], L).
+
+
+/*Applies a List of moves*/
+apply_moves(NewBoard, [], NewBoard).
+apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), apply_moves(NB,TM, NewBoard).
+
+
+
+
 
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
@@ -224,7 +304,7 @@ logo :- write(' ________________________'), nl,
 
 start :- load, createBoard(6,6), nl, makeHand(5, []).
 
-menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
+menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
                         write('    ----- '), write('1. Play'), write(' -----'), nl, 
                         write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
                         write('Write the number of the option followed by a dot.'), nl,
@@ -233,3 +313,8 @@ menu :- repeat, use_module(library(random)), write('\33\[2J'), nl, logo, write('
 /* Menu Options */
 choice(1) :- start.
 choice(2) :- abort.
+
+
+/*LIXO é so para efeitos de teste...*/
+randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], apply_moves(B, L, NB), displayBoard(NB).
+
