@@ -219,11 +219,9 @@ validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, 
 inHand([], _Hand).
 inHand([H|T], Hand) :- member(H, Hand), inHand(T, Hand). 
 
-isEmptyTile(N, B) :- nth0(N, B, T), T = tile(' ', ' ').
+isnotEmptyTile(N, B) :- nth0(N, B, T), E = tile(' ', ' '), dif(E, T).
 
-emptyTilesBoard(C, B) :- findall(T, isEmptyTile(T, B), X), length(X, C).
-
-nTilesBoard(N, B) :- nth0(0, B, F), length(F, L), T is L*L, emptyTilesBoard(C, B), V is T-C, N = V.
+nTilesBoard(C, B) :- findall(T, isnotEmptyTile(T, B), X), length(X, C).
 
 /* FUNCOES DE VALID ERA A IDEIA QUE TIVE ONTEM, MAS ALTERA AS TUAS QUE DEPOIS ALTERO O MEU BOT... ESTAS NÃO ESTAO TESTADAS... */
 
