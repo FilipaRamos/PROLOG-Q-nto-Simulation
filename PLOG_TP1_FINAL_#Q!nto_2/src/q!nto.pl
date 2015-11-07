@@ -219,6 +219,8 @@ validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, 
 inHand([], _Hand).
 inHand([H|T], Hand) :- member(H, Hand), inHand(T, Hand). 
 
+nTilesBoard(N, B).
+
 
 /* FUNCOES DE VALID ERA A IDEIA QUE TIVE ONTEM, MAS ALTERA AS TUAS QUE DEPOIS ALTERO O MEU BOT... ESTAS NÃO ESTAO TESTADAS... */
 
