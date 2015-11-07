@@ -81,8 +81,6 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 /* Lista de Listas..Cria Board Matrix tudo com espaços vazios...*/
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
-
-
 /* Computer - Move Tile */
 computerMove.
 
@@ -217,7 +215,7 @@ validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, 
 
 /*BOT*/
 
-/*Verifies is a Given Tile belongs to the Hand*/
+/*Verifies if a Given Tile belongs to the Hand*/
 inHand([], _Hand).
 inHand([H|T], Hand) :- member(H, Hand), inHand(T, Hand). 
 
@@ -291,8 +289,6 @@ get_best_move(B, Hand,L) :- best_Mov(B,[_P,_X,_Y|_T], Hand, _Pont, [_BestH|_Best
 apply_moves(NewBoard, [], NewBoard).
 apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), apply_moves(NB,TM, NewBoard).
 
-
-
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
 
@@ -313,6 +309,16 @@ menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'),
 /* Menu Options */
 choice(1) :- start.
 choice(2) :- abort.
+
+/* Ciclo de jogo */
+/*loop :- dynamic state */ /* 2.*/
+/*main :- */
+	/*repeat,*/
+	/*retract(state(T1, P1)),*/
+/*	play(T1, P1, T2, P2),*/
+/*	assert(state(T2, P2)),*/
+/*	done(T1,P1),*/
+/*	mensagem.*/
 
 
 /*LIXO é so para efeitos de teste...*/
