@@ -336,7 +336,7 @@ play(5) :- abort.
 
 /* Done */
 /* verifica se o jogo terminou (se houverem 60 tiles no tabuleiro) */
-done(T1, P1) :- nTilesBoard(60, B1).
+done(T1, P1) :- nTilesBoard(60, T1).
 
 /* Mensagem */
 mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
