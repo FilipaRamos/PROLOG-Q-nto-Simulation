@@ -35,17 +35,20 @@ imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X),
                                 writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /* Generate Hand */
-randomHand(0, _L, _L2, _C).
-randomHand(N, L, L2, C) :- N > 0, random(1, C, R), nth1(R, L, X), 
+randomHand(0, _L, _L2, _C, _L2).
+randomHand(N, L, L2, C, H) :- N > 0, random(1, C, R), nth1(R, L, X), 
                                                 delete(L, X, L4), C1 is C-1, 
-                                                append([X], L2, L3), N1 is N-1, write(L3), randomHand(N1, L4, L3, C1).
+                                                append([X], L2, L3), N1 is N-1, randomHand(N1, L4, L3, C1, H).
+
+writeHand(H) :- write(H).
 
 
 /* Hand */
 /* makeHand(0, H) :- H = []. */
-/* N -> número de cartas da mão */
+/* N -> número de cartas que faltam na mão */
 /* L -> mão anterior */
-makeHand(N, L) :- makeDeck(X), randomHand(N, X, L, 36).
+/* H -> nova mão resultante */
+makeHand(N, L, H) :- makeDeck(X), randomHand(N, X, L, 36, H), writeHand(H).
 
 /* Display hand */
 displayHand(H) :- write(H).
