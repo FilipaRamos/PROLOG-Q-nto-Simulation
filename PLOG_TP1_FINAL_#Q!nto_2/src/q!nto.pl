@@ -134,14 +134,6 @@ getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 /*BOT*/
 
 /*Verifies if a Given Tile belongs to the Hand*/
-
-<<<<<<< HEAD
-/* Verifies whether it is an an empty tile or not */
-isnotEmptyTile(N, B) :- nth0(N, B, T), E = tile(' ', ' '), dif(E, T).
-
-/* Counts the tiles on the board that have been played */
-nTilesBoard(C, B) :- findall(T, isnotEmptyTile(T, B), X), length(X, C).
-=======
 inHand(List, Hand):- sublist(Hand, List, _, _, _), List \= [].
 
 inHandPos(List, Hand):-  sublist(Hand, TileTemp, _, _, _),TileTemp \= [],permutation(TileTemp, Tiles), extract_pos(List, Tiles, _).
@@ -149,8 +141,12 @@ inHandPos(List, Hand):-  sublist(Hand, TileTemp, _, _, _),TileTemp \= [],permuta
 extract_pos([],[], []).
 
 extract_pos([Move|Moves], [Tile|Tiles], [Pos|Positions]):- Move = [Tile, X, Y], Pos = [X,Y], !, extract_pos(Moves, Tiles, Positions).
->>>>>>> origin/master
 
+/* Verifies whether it is an an empty tile or not */
+isnotEmptyTile(N, B) :- nth0(N, B, T), E = tile(' ', ' '), dif(E, T).
+
+/* Counts the tiles on the board that have been played */
+nTilesBoard(C, B) :- findall(T, isnotEmptyTile(T, B), X), length(X, C).
 
 /*Dir pode ser 01- UP 0-1- DOWN 10- LEFT -10- RIGHT */
 validMovAux(B, [X,Y], _D, _T, [],[],[]) :- \+((length(B, H), nth0(0, B, L), length(L, W) , X>0, X =<H, Y>0, Y=<W)), !.
