@@ -332,14 +332,14 @@ play(4) :- menu.
 play(5) :- abort.
 
 /* Ciclo de jogo */
-/*loop :- dynamic state */ /* 2.*/
-/*main :- */
-	/*repeat,*/
-	/*retract(state(T1, P1)),*/
-/*	play(T1, P1, T2, P2),*/
-/*	assert(state(T2, P2)),*/
-/*	done(T1,P1),*/
-/*	mensagem.*/
+:- dynamic state/2.
+main :- 
+	repeat,
+	retract(state(T1, P1)),
+	play(T1, P1, T2, P2),
+	assert(state(T2, P2)),
+	done(T1,P1),
+	mensagem.
 
 
 /*LIXO é so para efeitos de teste...*/
