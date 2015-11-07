@@ -293,22 +293,43 @@ apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), apply_moves(NB,T
 load :- use_module(library(random)), use_module(library(lists)).
 
 /* menu */
-logo :- write(' ________________________'), nl,
-                write('|                        |'), nl,
-                write('|          Q!NTO         |'), nl,
-                write('|________________________|'), nl, nl.
+logo :- write('           ________________________'), nl,
+                write('          |                        |'), nl,
+                write('          |          Q!NTO         |'), nl,
+                write('          |________________________|'), nl, nl.
+
+playlogo :- write('           ________________________'), nl,
+                write('          |                        |'), nl,
+                write('          |          PLAY!         |'), nl,
+                write('          |________________________|'), nl, nl.
 
 start :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, []).
 
-menu :- repeat, write('\33\[2J'), nl, logo, write(' ---------- MENU ---------'), nl, nl,
-                        write('    ----- '), write('1. Play'), write(' -----'), nl, 
-                        write('    ----- '), write('2. Exit'), write(' -----'), nl, nl,
+menu :- repeat, write('\33\[2J'), nl, logo, write('           ---------- MENU ---------'), nl, nl,
+                        write('              ----- '), write('1. Play'), write(' -----'), nl, 
+                        write('             ------ '), write('2. Exit'), write(' ------'), nl, nl,
                         write('Write the number of the option followed by a dot.'), nl,
                         read(C), C>0, C=<2, number(C), choice(C).
 
+menuPlay :- repeat, write('\33\[2J'), nl, playlogo, write('        ---------- PLAY MENU ---------'), nl, nl,
+                        write('     ------- '), write('1. Player vs Player'), write(' --------'), nl, 
+                        write('    -------- '), write('2. Player vs Computer'), write(' -------'), nl,
+                        write('   --------- '), write('3. Computer vs Computer'), write(' ------'), nl,
+                        write('    ------------  '), write('4. Go Back'), write('  ------------'), nl,
+                        write('     -------------  '), write('5. Exit'), write('  ------------'), nl, nl,
+                        write('Write the number of the option followed by a dot.'), nl,
+                        read(P), P>0, P=<5, number(P), play(P).
+
 /* Menu Options */
-choice(1) :- start.
+choice(1) :- menuPlay.
 choice(2) :- abort.
+
+/* Play Options */
+play(1).
+play(2).
+play(3).
+play(4) :- menu.
+play(5) :- abort.
 
 /* Ciclo de jogo */
 /*loop :- dynamic state */ /* 2.*/
