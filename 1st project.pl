@@ -31,8 +31,7 @@ writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 /* Existent Tiles */
 makeDeck(X) :- findall(T, oneTile(T), X).
 
-imprimeDeck(N, L) :- use_module(library(lists)), nth0(N, L, X), 
-                                writetile(X), N1 is N+1, imprimeDeck(N1, L).
+imprimeDeck(N, L) :- nth0(N, L, X), writetile(X), N1 is N+1, imprimeDeck(N1, L).
 
 /* Generate Hand */
 randomHand(0, _L, _L2, _C, _L2).
