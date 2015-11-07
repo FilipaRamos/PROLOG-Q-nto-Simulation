@@ -331,6 +331,13 @@ play(3).
 play(4) :- menu.
 play(5) :- abort.
 
+/* Done */
+/* verifica se o jogo terminou (se houverem 60 tiles no tabuleiro) */
+done(T1, P1) :- nTilesBoard(60, B1).
+
+/* Mensagem */
+mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
+
 /* Ciclo de jogo */
 :- dynamic state/2.
 main :- 
