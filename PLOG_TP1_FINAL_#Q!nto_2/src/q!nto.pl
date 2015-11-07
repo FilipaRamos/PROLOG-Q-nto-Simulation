@@ -131,96 +131,16 @@ listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
-/* Valid Moves */
-
-/* Different colors in line or row */
-compareColor(C, C1) :- \+ C = C1.
-compareColor(_C, ' ').
-compareColor(' ', _C).
-
-difColorLinha(0, _B, _Px, _T).
-difColorLinha(N, B, Px, T) :- tileColor(T, C), getTile(B, Px, N, T1), 
-                                                        tileColor(T1, C1), compareColor(C, C1),
-                                                        N1 is N-1, difColorLinha(N1, B, Px, T).
-
-difColorColuna(0, _B, _Py, _T).
-difColorColuna(N, B, Py, T) :- tileColor(T, C), getTile(B, N, Py, T1), 
-                                                        tileColor(T1, C1), compareColor(C, C1), 
-                                                        N1 is N-1, difColorColuna(N1, B, Py, T).
-
-difColors(N, B, _Px, Py, T) :- difColorColuna(N, B, Py, T).
-difColors(N, B, Px, _Py, T) :- difColorLinha(N, B, Px, T).
-
-/* Same colors in line or row */
-compareColorEq(C, C1) :- C = C1.
-compareColorEq(_C, ' ').
-compareColorEq(' ', _C).
-
-sameColorLinha(0, _B, _Px, _T).
-sameColorLinha(N, B, Px, T) :- tileColor(T, C), getTile(B, Px, N, T1), 
-                                                        tileColor(T1, C1), compareColorEq(C, C1), 
-                                                        N1 is N-1, sameColorLinha(N1, B, Px, T).
-
-sameColorColuna(0, _B, _Py, _T).
-sameColorColuna(N, B, Py, T) :- tileColor(T, C),  getTile(B, N, Py, T1), 
-                                                        tileColor(T1, C1), compareColorEq(C, C1), 
-                                                        N1 is N-1, sameColorColuna(N1, B, Py, T).
-
-sameColors(N, B, _Px, Py, T) :- sameColorColuna(N, B, Py, T).
-sameColors(N, B, Px, _Py, T) :- sameColorLinha(N, B, Px, T).
-
-/* Different shapes in line or row */
-compareShape(S, S1) :- \+ S = S1.
-compareShape(_S, ' ').
-compareShape(' ', _S1).
-
-difShapeLinha(0, _B, _Px, _T).
-difShapeLinha(N, B, Px, T) :- tileShape(T, S), getTile(B, Px, N, T1), 
-                                                                tileShape(T1, S1), compareShape(S, S1), 
-                                                                N1 is N-1, difShapeLinha(N1, B, Px, T).
-
-difShapeColuna(0, _B, _Py, _T).
-difShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1), 
-                                                                tileShape(T1, S1), compareShape(S, S1), 
-                                                                N1 is N-1, difShapeColuna(N1, B, Py, T). 
-
-difShapes(N, B, _Px, Py, T) :- difShapeColuna(N, B, Py, T).
-difShapes(N, B, Px, _Py, T) :- difShapeLinha(N, B, Px, T).
-
-/* Same shapes in line or row */
-compareShapeEq(S, S1) :- S = S1.
-compareShapeEq(_S, ' ').
-compareShapeEq(' ', _S1).
-
-sameShapeLinha(0, _B, _Px, _T).
-sameShapeLinha(N, B, Px, T) :- tileShape(T, S), getTile(B, Px, N, T1), 
-                                                                tileShape(T1, S1), compareShapeEq(S, S1), 
-                                                                N1 is N-1, sameShapeLinha(N1, B, Px, T).
-
-sameShapeColuna(0, _B, _Py, _T).
-sameShapeColuna(N, B, Py, T) :- tileShape(T, S), getTile(B, N, Py, T1), 
-                                                                tileShape(T1, S1), compareShapeEq(S, S1), 
-                                                                N1 is N-1, sameShapeColuna(N1, B, Py, T).
-
-sameShapes(N, B, _Px, Py, T) :- sameShapeColuna(N, B, Py, T).
-sameShapes(N, B, Px, _Py, T) :- sameShapeLinha(N, B, Px, T).
-sameShapes(N, B, Px, Py, T) :- sameShapeLinha(N, B, Px, T), sameShapeColuna(N, B, Py, T).
-
-
-/* All possible valid moves */
-validMove(N, B, Px, Py, T) :- difColors(N, B, Px, Py, T), sameShapes(N, B, Px,Py,T) .
-validMove(N, B, Px, Py, T) :- sameColors(N, B, Px, Py, T), difShapes(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- difShapes(N, B, Px, Py, T), difColors(N, B, Px, Py, T).
-validMove(N, B, Px, Py, T) :- sameShapes(N, B, Px, Py, T), sameColors(N, B, Px, Py, T).
-
 /*BOT*/
 
 /*Verifies if a Given Tile belongs to the Hand*/
 inHand([], _Hand).
 inHand([H|T], Hand) :- member(H, Hand), inHand(T, Hand). 
 
+/* Verifies whether it is an an empty tile or not */
 isnotEmptyTile(N, B) :- nth0(N, B, T), E = tile(' ', ' '), dif(E, T).
 
+/* Counts the tiles on the board that have been played */
 nTilesBoard(C, B) :- findall(T, isnotEmptyTile(T, B), X), length(X, C).
 
 /* FUNCOES DE VALID ERA A IDEIA QUE TIVE ONTEM, MAS ALTERA AS TUAS QUE DEPOIS ALTERO O MEU BOT... ESTAS NÃO ESTAO TESTADAS... */
