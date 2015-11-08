@@ -82,21 +82,19 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 /* Lista de Listas..Cria Board Matrix tudo com espaços vazios...*/
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
-/* Computer - Move Tile */
-computerMove.
-
 /* User - Move Tile */ 
-numberTiles(0, _B, _Bnew).
-numberTiles(Count, B, Bnew) :- write('How many tiles do you want to play? '), read(Count), moveTile(C, S, Px, Py), T is tile(C, S), 
-								move(B, Px, PY, T, Bnew), N is Count-1, numberTiles(N, Bnew, Bnew).
+numberTiles(B, Bnew) :- write('How many tiles do you want to play? '), read(Count), movement(Count, B, Bnew).
+
+movement(0, B, Bnew).
+movement(N, B, Bnew) :- moveTile(C, S, Px, Py), T = tile(C, S),
+						matrix_set(B, Px, Py, T, Bnew), N1 is N-1, movement(N1, Bnew, Bnew).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
-
 move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1), 
-                                                P is Px-1, replace(B, P, B1, Bnew).
+                            P is Px-1, replace(B, P, B1, Bnew).
 
 
 moveTile(C, S, Px, Py) :- write('Choose the tile to play. Color: '), 
