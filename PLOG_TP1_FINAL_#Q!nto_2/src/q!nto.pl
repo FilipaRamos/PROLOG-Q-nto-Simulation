@@ -85,14 +85,17 @@ createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix
 /* User - Move Tile */ 
 numberTiles(L) :- write('How many tiles do you want to play? '), read(Count), movement(Count, L).
 
-movement(0, L).
-movement(N, L) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py], append(L, Move, L1), 
-				    N1 is N-1, movement(N1, L1).
+movement(0, []).
+movement(N, [Move|L]) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py],
+                                    N1 is N-1, movement(N1, L).
 
 /*REPLACES AN ELEMNT */
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
+
+ move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
+                             P is Px-1, replace(B, P, B1, Bnew).
 
 /*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
 moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN THE END!!!! Color: '),read_line(_),
@@ -126,6 +129,11 @@ expand_matrix_right([],[]).
 expand_matrix_right([L|Matrix], [NL|NewMatrix]):- empty_tile( E ), append(L, [E], NL), expand_matrix_right(Matrix, NewMatrix).
 listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
+
+/*Expand 5 tiles in each direction*/
+
+
+
 
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
@@ -204,9 +212,7 @@ validPositions(B, [FirstMove|OtherMoves]):- FirstMove =[_Tile, X, Y], validPosit
 
 /*Tests if a Move is valid or not, if it isnt returns a valid one...*/
 
-
-validMov(B,[H|T], Hand, Pont):- validMovVert(B,[H|T], Hand, Pont) , validMovHor(B,[H|T], Hand, Pont) , Pont > 0. 
-/*validMov(B,[H|T], Hand, Pont):- validMovVert(B,[H|T], Hand, Pont) , Pont is Pont1+Pont2, Pont > 0.*/
+validMov(B,[H|T], Hand, Pont):- validMovVert(B,[H|T], Hand, Pont1) , validMovHor(B,[H|T], Hand, Pont2) , Pont is Pont1+Pont2, Pont > 0.
 
 validMovVert(B,[H|T], Hand, Pontf) :-
         inHandPos([H|T], Hand),
@@ -311,7 +317,7 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(5,5,B), displayBoard(B), nl, 
-			makeHand(18, [], H), numberTiles(L), validMov(B,L, H, Pont), apply_moves(B, L, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
+			makeHand(18, [], H), numberTiles(L), validMov(B, L, H, Pont), apply_moves(B, L, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
