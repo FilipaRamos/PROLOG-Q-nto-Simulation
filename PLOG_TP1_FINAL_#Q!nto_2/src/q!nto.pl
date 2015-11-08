@@ -132,8 +132,6 @@ listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
-/*BOT*/
-
 /*Verifies if a Given Tile belongs to the Hand*/
 
 inHand(List, Hand):- sublist(Hand, List, _, _, _), List \= [].
@@ -299,16 +297,14 @@ choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-playOp(1) :- load, createBoard(5,5,B), displayBoard(B), nl, 
-			makeHand(18, L, H), get_best_move(B, H, [HB|TB]), 
-			HB= [T,PX,PY], matrix_set(B, Px, Py, T, NewMatrix), 
-			display.
+playOp(1) :- load, write('\33\[2J'), createBoard(5,5,B), displayBoard(B), nl, 
+			makeHand(18, [], H).
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
 playOp(5) :- abort.
 
-
+/*BOT*/
 bot :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, _L, H), get_best_move(B, H, L),  apply_moves(B, L, NB), displayBoard(NB).
 /* Done */
 /* verifica se o jogo terminou (se houverem 60 tiles no tabuleiro) */
