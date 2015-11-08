@@ -94,7 +94,7 @@ replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
-move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
+ move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
                              P is Px-1, replace(B, P, B1, Bnew).
 
 /*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
@@ -149,8 +149,8 @@ diplay([H|T]) :- write(H), write(' '), diplay(T).
 /*Verifies if a Given Tile belongs to the Hand*/
 
 inHand(List, Hand):- sublist(Hand, List, _, _, _), List \= [].
-inHandPos(List, Hand):-  sublist(Hand, TileTemp, _, _, _),TileTemp \= [],permutation(TileTemp, Tiles), extract_pos(List, Tiles, _).
-
+inHandPos(List, Hand):- var(List), sublist(Hand, TileTemp, _, _, _),TileTemp \= [],permutation(TileTemp, Tiles), extract_pos(List, Tiles, _).
+inHandPos(List, Hand):- nonvar(List), extract_pos(List, Tiles, _), sublist(Hand, Tiles, _, _, _).
 /*Extracs position from a list of moves formed by Tile, Px, Py*/
 extract_pos([],[],[]).
 extract_pos([Move|Moves], [Tile|Tiles], [Pos|Positions]):- Move = [Tile, X, Y], Pos = [X,Y], !, extract_pos(Moves, Tiles, Positions).
@@ -318,7 +318,7 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(5,5,B), displayBoard(B), nl, 
-			makeHand(18, [], H), numberTiles(L), validMov(B, L, H, Pont), apply_moves(B, L, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
+                        makeHand(18, [], H), numberTiles(L), validMov(B, L, H, Pont), apply_moves(B, L, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
