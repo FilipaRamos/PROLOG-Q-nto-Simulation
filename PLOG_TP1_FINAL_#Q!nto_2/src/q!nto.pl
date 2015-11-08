@@ -89,17 +89,14 @@ movement(0, L).
 movement(N, L) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py], append(L, Move, L1), 
 				    N1 is N-1, movement(N1, L1).
 
-
+/*REPLACES AN ELEMNT */
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
-move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1), 
-                            P is Px-1, replace(B, P, B1, Bnew).
-
-
-moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN THE END!!!! Color: '), 
-                        read_line(X), name(C, X), color(C), write('Shape: '), read_line(X), name(S, X), shape(S), write('Choose where to place it. Number? '),
+/*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
+moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN THE END!!!! Color: '),read_line(_),
+                        read_line(X1), name(C, X1), color( C ), write('Shape: '), read_line(X2), name(S, X2), shape(S), write('Choose where to place it. Number? '),
                         read(Px), write('Letter ?'), read(Py).
                         
 
@@ -143,11 +140,10 @@ diplay([H|T]) :- write(H), write(' '), diplay(T).
 /*Verifies if a Given Tile belongs to the Hand*/
 
 inHand(List, Hand):- sublist(Hand, List, _, _, _), List \= [].
-
 inHandPos(List, Hand):-  sublist(Hand, TileTemp, _, _, _),TileTemp \= [],permutation(TileTemp, Tiles), extract_pos(List, Tiles, _).
 
+/*Extracs position from a list of moves formed by Tile, Px, Py*/
 extract_pos([],[],[]).
-
 extract_pos([Move|Moves], [Tile|Tiles], [Pos|Positions]):- Move = [Tile, X, Y], Pos = [X,Y], !, extract_pos(Moves, Tiles, Positions).
 
 /* Verifies whether it is an empty tile or not */
@@ -220,7 +216,6 @@ validMovVert(B,[H|T], Hand, Pontf) :-
         apply_moves(B, [H|T], NewBoard),
         validMovAux(NewBoard, [X,Y], [1,0] , Positions, Tseen1, LS1, LC1),
         X1 is X - 1,
-        %nl, write(' X1 '), X1, nl,
         validMovAux(NewBoard, [X1,Y], [-1,0], Positions, Tseen2, LS2, LC2),
         append(Tseen1, Tseen2, Tseen),
         write('Valid Move: Tseen '), diplay(Tseen), 
@@ -246,7 +241,6 @@ validMovHor(B,[H|T], Hand, Pontf) :-
         apply_moves(B, [H|T], NewBoard),
         validMovAux(NewBoard, [X,Y], [0,1] , Positions, Tseen1, LS1, LC1),
         Y1 is Y - 1,
-        /*nl, write(' Y1 '), Y1, nl,*/
      validMovAux(NewBoard, [X,Y1], [0,-1], Positions, Tseen2, LS2, LC2),
         append(Tseen1, Tseen2, Tseen),
         append(LS1, LS2, LS), 
@@ -258,10 +252,7 @@ validMovHor(B,[H|T], Hand, Pontf) :-
          if(N mod 5 =:= 0, Pont is N *2, Pont is N ))),Pont is 0),
         Pontf is Pont.
  
-
-
-
-/*Tests if in a given List are either all the same or all different*/
+/*Tests if in a given List all elements are either all the same or all different*/
 all_same_or_different(L):- all_same( L ), !.
 all_same_or_different(L):- all_different( L ), !.
 all_different([]).
@@ -270,15 +261,14 @@ all_same([H|T]):- length(T,N), listElement(T, N, H).
 
 
 /*returns all valid moves...*/
-/*getAllValidMoves(B,[P,X,Y|T], Hand, Pont, L) :- MOVE = [P, X, Y] , findall(MOVE,validMov(B,[P,X,Y|T], Hand, Pont), L).*/
-
 getAllValidMoves(B, Hand, L) :- findall(Move, validMov(B,Move, Hand, _Pont), L).
 
+/*calculates best Move the one that uses more tiles...*/
 useMoreTiles([], _BestMove).
 useMoreTiles([BestH| BestT], BestMove) :-  length(BestH, N1), length(NewBest, N2), N1>N2, NewBest = BestH,
                                             useMoreTiles(BestT, BestMove).
 
-
+/*return the best Move the one that uses more tiles...*/
 best_Mov(B,Hand, NewBest) :- !, getAllValidMoves(B, Hand, [BestH|BestT]), useMoreTiles([BestH| BestT], NewBest).
  
  /*Applies a List of moves*/
