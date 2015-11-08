@@ -89,6 +89,7 @@ movement(0, L).
 movement(N, L) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py], append(L, Move, L1), 
 				    N1 is N-1, movement(N1, L1).
 
+
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
