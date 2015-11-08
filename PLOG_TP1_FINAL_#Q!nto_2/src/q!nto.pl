@@ -86,7 +86,9 @@ createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix
 computerMove.
 
 /* User - Move Tile */ 
-numberTiles :- write('How many tiles do you want to play? '), read(N), moveTile(N), X is 5-N, computerMove, randomHand(X).
+numberTiles(0, _B, _Bnew).
+numberTiles(Count, B, Bnew) :- write('How many tiles do you want to play? '), read(Count), moveTile(C, S, Px, Py), T is tile(C, S), 
+								move(B, Px, PY, T, Bnew), N is Count-1, numberTiles(N, Bnew, Bnew).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
@@ -273,7 +275,7 @@ playlogo :- write('           ________________________'), nl,
                 write('          |          PLAY!         |'), nl,
                 write('          |________________________|'), nl, nl.
 
-menu :- repeat, write('\33\[2J'), nl, logo, write('           ---------- MENU ---------'), nl, nl,
+menu :- load, repeat, write('\33\[2J'), nl, logo, write('           ---------- MENU ---------'), nl, nl,
                         write('              ----- '), write('1. Play'), write(' -----'), nl, 
                         write('             ------ '), write('2. Exit'), write(' ------'), nl, nl,
                         write('Write the number of the option followed by a dot.'), nl,
@@ -293,8 +295,8 @@ choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-playOp(1) :- load, write('\33\[2J'), createBoard(5,5,B), displayBoard(B), nl, 
-			makeHand(18, [], H).
+playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(5,5,B), displayBoard(B), nl, 
+			makeHand(18, [], H), numberTiles(C, B, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
