@@ -142,12 +142,8 @@ extract_pos([],[],[]).
 
 extract_pos([Move|Moves], [Tile|Tiles], [Pos|Positions]):- Move = [Tile, X, Y], Pos = [X,Y], !, extract_pos(Moves, Tiles, Positions).
 
-/* Verifies whether it is an empty tile or not */
-isnotEmptyTile(N, B) :- nth0(N, B, T), E = tile(' ', ' '), dif(E, T).
-
-/* Counts the tiles on the board that have been played */
-nTilesBoard(C, B) :- findall(T, isnotEmptyTile(T, B), X), length(X, C).
-
+/* Verifies whether the hand is empty or not */
+isEmptyHand(H) :- length(H, C), C = 0.
 
 /*Dir pode ser 01- UP 0-1- DOWN 10- LEFT -10- RIGHT */
 validMovAux(B, [X,Y], _D, _T, [],[],[]) :- \+((length(B, H), nth0(0, B, L), length(L, W) , X>0, X =<H, Y>0, Y=<W)), !.
@@ -308,7 +304,7 @@ playOp(5) :- abort.
 bot :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, _L, H), get_best_move(B, H, L),  apply_moves(B, L, NB), displayBoard(NB).
 /* Done */
 /* verifica se o jogo terminou (se houverem 60 tiles no tabuleiro) */
-done(T1, P1) :- nTilesBoard(60, T1).
+done(B1, P1) :- getHand(P1, H), isEmptyHand(H).
 
 /* Mensagem */
 mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
@@ -317,10 +313,10 @@ mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
 :- dynamic state/2.
 main :- 
         repeat,
-        retract(state(T1, P1)),
-        play(T1, P1, T2, P2),
-        assert(state(T2, P2)),
-        done(T1,P1),
+        retract(state(B1, P1)),
+        play(B1, P1, B2, P2),
+        assert(state(B2, P2)),
+        done(B1,P1),
         mensagem.
 
 
