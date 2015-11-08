@@ -1,4 +1,5 @@
-
+:-use_module(library(lists)).
+:-use_module(library(between)).
 /*PROLOG Q!NTO SIMULATION*/
 
 /* represents the possible colors */
@@ -181,7 +182,7 @@ validPositions(B, [FirstMove|OtherMoves]):- FirstMove =[_Tile, X, Y], validPosit
 /*Tests if a Move is valid or not, if it isnt returns a valid one...*/
 
 
-validMov(B,[H|T], Hand, Pont):- validMovHor(B,[H|T], Hand, Pont), Pont > 0. 
+validMov(B,[H|T], Hand, Pont):- validMovHor(B,[H|T], Hand, Pont1), validMovVert(B,[H|T], Hand, Pont2), Pont is Pont1+Pont2, Pont > 0. 
 
 validMovHor(B,[H|T], Hand, Pont) :-
         inHandPos([H|T], Hand),
@@ -196,10 +197,13 @@ validMovHor(B,[H|T], Hand, Pont) :-
         append(LS1, LS2, LS), 
         append(LC1, LC2, LC),
         length(LS, N),
-        if((Tseen = Positions, all_same_or_different(LS), all_same_or_different(LC)), 
+        if((Tseen = Positions, all_same_or_different(LS), all_same_or_different(LC)),
+        (if(N =:= 1, Pont is 0,
+         if(N mod 5 =:= 0, Pont is N *2, Pont is N ))),Pont is 0).
+       /* if((Tseen = Positions, all_same_or_different(LS), all_same_or_different(LC)), 
         (if(N =:= 1, PontTemp is 0,
         (if(N mod 5 =:= 0, PontTemp is N *2, PontTemp is N )))), PontTemp is 0),
-        if(validMovVert(B,[H|T], Hand, Pont2), Pont is PontTemp + Pont2, Pont is PontTemp).
+        if(validMovVert(B,[H|T], Hand, Pont2), Pont is PontTemp + Pont2, Pont is PontTemp).*/
 
 validMovVert(B,[H|T], Hand, Pont) :-
         inHandPos([H|T], Hand),
@@ -225,6 +229,9 @@ all_different([]).
 all_different([H|T]):- \+member(H, T), all_different( T ).
 all_same([H|T]):- length(T,N), listElement(T, N, H).
 
+/*Pontuacao*/
+
+calcPontuacao(B,[H|T], Hand, Pont, Sentido) :- Sentido = 'V', validMovHor(B,[H|T], Hand, Pont).
 
 /*returns all valid moves...*/
 grtAllValidMoves(B,[P,X,Y|T], Hand, Pont, L) :- findall([P,X,Y],validMov(B,[P,X,Y|T], Hand, Pont), L).
@@ -292,12 +299,12 @@ mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
 /* Ciclo de jogo */
 :- dynamic state/2.
 main :- 
-	repeat,
-	retract(state(T1, P1)),
-	play(T1, P1, T2, P2),
-	assert(state(T2, P2)),
-	done(T1,P1),
-	mensagem.
+        repeat,
+        retract(state(T1, P1)),
+        play(T1, P1, T2, P2),
+        assert(state(T2, P2)),
+        done(T1,P1),
+        mensagem.
 
 
 /*LIXO é so para efeitos de teste...*/
