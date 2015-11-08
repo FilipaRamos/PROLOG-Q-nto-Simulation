@@ -86,8 +86,7 @@ createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix
 numberTiles(B, Bnew) :- write('How many tiles do you want to play? '), read(Count), movement(Count, B, Bnew).
 
 movement(0, B, Bnew).
-movement(N, B, Bnew) :- moveTile(C, S, Px, Py), T = tile(C, S),
-						matrix_set(B, Px, Py, T, Bnew), N1 is N-1, movement(N1, Bnew, Bnew).
+movement(N, B, Bnew) :- moveTile(C, S, Px, Py), T = tile(C, S), N1 is N-1, movement(N1, Bnew, Bnew).
 
 replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
