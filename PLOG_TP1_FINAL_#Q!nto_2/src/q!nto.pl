@@ -94,7 +94,7 @@ replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
- move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
+move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
                              P is Px-1, replace(B, P, B1, Bnew).
 
 /*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
@@ -131,9 +131,10 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /*Expand 5 tiles in each direction*/
+expand_matrix_5left(CC, M, NM).
+expand_matrix_5left(CC, M, NM) :- CC > 0, CC < 5, expand_matrix_left(M, NM) ,CC1 is CC+1, expand_matrix_5left(CC1, NM, NM1).
 
-
-
+test :- createMatrix(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), displayBoard(NM).
 
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
