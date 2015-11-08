@@ -279,8 +279,6 @@ playlogo :- write('           ________________________'), nl,
                 write('          |          PLAY!         |'), nl,
                 write('          |________________________|'), nl, nl.
 
-start :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, L, H).
-
 menu :- repeat, write('\33\[2J'), nl, logo, write('           ---------- MENU ---------'), nl, nl,
                         write('              ----- '), write('1. Play'), write(' -----'), nl, 
                         write('             ------ '), write('2. Exit'), write(' ------'), nl, nl,
@@ -294,18 +292,21 @@ menuPlay :- repeat, write('\33\[2J'), nl, playlogo, write('        ---------- PL
                         write('    ------------  '), write('4. Go Back'), write('  ------------'), nl,
                         write('     -------------  '), write('5. Exit'), write('  ------------'), nl, nl,
                         write('Write the number of the option followed by a dot.'), nl,
-                        read(P), P>0, P=<5, number(P), play(P).
+                        read(P), P>0, P=<5, number(P), playOp(P).
 
 /* Menu Options */
 choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-play(1).
-play(2).
-play(3) :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, L, H), get_best_move(B, H, [HB|TB]), HB= [T,PX,PY], matrix_set(B, Px, Py, T, NewMatrix), display.
-play(4) :- menu.
-play(5) :- abort.
+playOp(1) :- load, createBoard(5,5,B), displayBoard(B), nl, 
+			makeHand(18, L, H), get_best_move(B, H, [HB|TB]), 
+			HB= [T,PX,PY], matrix_set(B, Px, Py, T, NewMatrix), 
+			display.
+playOp(2).
+playOp(3).
+playOp(4) :- menu.
+playOp(5) :- abort.
 
 
 bot :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, _L, H), get_best_move(B, H, L),  apply_moves(B, L, NB), displayBoard(NB).
