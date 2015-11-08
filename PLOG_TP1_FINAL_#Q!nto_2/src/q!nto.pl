@@ -72,8 +72,8 @@ tHorizontalLine(0) :-  write('|').
 tHorizontalLine(N) :- N>0, write(' '), write('|'), write('----'), N1 is N-1 , tHorizontalLine(N1).
 
 displayBoardaux([], _C).
-displayBoardaux([L1], C) :-  write(C) ,write(' '), length(L1,N1), sHorizontalLine(N1,L1), write(' '), write(C), nl.
-displayBoardaux([L1|R], C) :- R \= [], length(L1,N1), C < N1, C2 is C+1, write(C), write(' '), sHorizontalLine(N1, L1), write(' '), write(C), nl, write('  '), tHorizontalLine(N1), nl, displayBoardaux(R, C2).
+displayBoardaux([L1], C) :- write('  '), length(L1,N1), sHorizontalLine(N1,L1), write(' '), write(C), nl.
+displayBoardaux([L1|R], C) :- R \= [], length(L1,N1), C < N1, C2 is C+1, write('  '), sHorizontalLine(N1, L1), write(' '), write(C), nl, write('  '), tHorizontalLine(N1), nl, displayBoardaux(R, C2).
 
 displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,write('  '), fHorizontalLine(N1), nl,
                                                 displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), nl, write('  '), fguideLine(N1, 0), nl.
@@ -83,7 +83,7 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 createMatrix(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
 /* User - Move Tile */ 
-numberTiles(L) :- write('How many tiles do you want to play? '), read(Count), movement(Count, L).
+numberTiles(L) :- write('How many tiles do you want to play? '), read(Count), Count > 0,Count < 6,movement(Count, L).
 
 movement(0, []).
 movement(N, [Move|L]) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py],
@@ -94,8 +94,8 @@ replace([_|T], 0, X, [X|T]).
 replace([H|T], I, X, [H|R]):- I > -1, NI is I-1, replace(T, NI, X, R), !.
 replace(L, _, _, L).
 
- move(B, Px, Py, T, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
-                             P is Px-1, replace(B, P, B1, Bnew).
+move(B, Px, Py, T, Hand, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
+                             P is Px-1, replace(B, P, B1, Bnew), deleteElemHand(Hand, T, NewHand).
 
 /*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
 moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN THE END!!!! Color: '),read_line(_),
@@ -131,7 +131,7 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 /*Expand 5 tiles in each direction*/
-expand_matrix_5left(CC, M, NM).
+expand_matrix_5left(5, NM, NM1).
 expand_matrix_5left(CC, M, NM) :- CC > 0, CC < 5, expand_matrix_left(M, NM) ,CC1 is CC+1, expand_matrix_5left(CC1, NM, NM1).
 
 test :- createMatrix(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), displayBoard(NM).
@@ -279,8 +279,15 @@ useMoreTiles([BestH| BestT], BestMove) :-  length(BestH, N1), length(NewBest, N2
 best_Mov(B,Hand, NewBest) :- !, getAllValidMoves(B, Hand, [BestH|BestT]), useMoreTiles([BestH| BestT], NewBest).
  
  /*Applies a List of moves*/
-apply_moves(NewBoard, [], NewBoard):- !.
-apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), !,apply_moves(NB,TM, NewBoard).
+apply_moves(NewBoard, [], Hand, NewBoard):- !.
+apply_moves(B, [[T,X,Y]|TM], Hand, NewBoard) :- move(B, X, Y, T, Hand, NB), !,apply_moves(NB,TM, NewHand, NewBoard).
+
+/**/
+
+deleteElemHand(Hand, Tile, NewHand) :- delete(Hand,Tile,NewHand1), length(NewHand1,TamanhoDepois), length(Hand,TamanhoAntes), TamanhoAntes-TamanhoDepois=:=2,append(NewHand1, Tile, NewHand).
+deleteElemHand(Hand, Tile, NewHand) :- delete(Hand,Tile,NewHand1).
+
+
 
 
 /* Load librarys */
@@ -317,18 +324,26 @@ choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(5,5,B), displayBoard(B), nl, 
-                        makeHand(18, [], H), numberTiles(L), validMov(B, L, H, Pont), apply_moves(B, L, Bnew), displayBoard(Bnew), write('      --- Player 2 turn! ---').
+playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(10,10,B), displayBoard(B), nl, 
+                        makeHand(18, [], Hand1), makeHand(18, [], Hand2),  game(B, 0, Hand1, Hand2), nl , displayBoard(Bnew), write('      --- Player 2 turn! ---').
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
 playOp(5) :- abort.
 
+state(Board, Hand1, Hand2, Deck).
+
+/* game loop */
+playMove(B, Hand, NewHand) :- displayBoard(B), nl,  numberTiles(L), validMov(B, L, Hand, _), apply_moves(B, L, Hand, NewHand, Bnew).
+
+game(Board,0, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand1), !, game(Board,1, Hand1, Hand2).
+game(Board,1, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand2), !, game(Board,0, Hand1, Hand2).
+
 /*BOT*/
 bot :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, _L, H), get_best_move(B, H, L),  apply_moves(B, L, NB), displayBoard(NB).
 /* Done */
-/* verifica se o jogo terminou (se houverem 60 tiles no tabuleiro) */
-done(B1, P1) :- getHand(P1, H), isEmptyHand(H).
+/* verifica se o jogo terminou (Quando uma das maos fica vazia) */
+done(B1, H) :- isEmptyHand(H).
 
 /* Mensagem */
 mensagem :- nl, write(" --- Terminou o jogo! --- "), nl.
