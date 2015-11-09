@@ -61,7 +61,7 @@ makeDeck(Deck) :- deckWithDuplicates(L1),  remvWildTiles(L1, L2),
 ///////////////  HAND  ////////////////
 ///////////////////////////////////////
 */
-          
+                  
 /*Creating Hands - Mixing Deck and Dividing it in two hands*/
 
 mixingElemtsDeck(Deck, NewDeck) :- makeDeck(Deck), random_permutation(Deck, NewDeck).
@@ -152,7 +152,7 @@ replace(L, _, _, L).
 
 move(B, Px, Py, T, Hand, Bnew) :- nth1(Px, B, L), I is Py-1, replace(L, I, T, B1),    
                              P is Px-1, replace(B, P, B1, Bnew), deleteElemHand(Hand, T, NewHand).
-               
+                             
 /*Applies a List of moves*/
 apply_moves(NewBoard, [], Hand, NewBoard):- !.
 apply_moves(B, [[T,X,Y]|TM], Hand, NewBoard) :- move(B, X, Y, T, Hand, NB), !,apply_moves(NB,TM, NewHand, NewBoard).
@@ -215,7 +215,7 @@ validMovHor(B,[H|T], Hand, Pontf) :-
         apply_moves(B, [H|T], NewBoard),
         validMovAux(NewBoard, [X,Y], [0,1] , Positions, Tseen1, LS1, LC1),
         Y1 is Y - 1,
-    validMovAux(NewBoard, [X,Y1], [0,-1], Positions, Tseen2, LS2, LC2),
+        validMovAux(NewBoard, [X,Y1], [0,-1], Positions, Tseen2, LS2, LC2),
         append(Tseen1, Tseen2, Tseen),
         append(LS1, LS2, LS), 
         append(LC1, LC2, LC),
@@ -229,7 +229,7 @@ all_same_or_different(L):- all_different( L ), !.
 all_different([]).
 all_different([H|T]):- \+member(H, T), all_different( T ).
 all_same([H|T]):- length(T,N), listElement(T, N, H).
-          
+                  
 
 /*
 /////////////////////////////////
@@ -270,8 +270,8 @@ test :- createBoard(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), dis
 randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], 
                 apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T2,T3] , validMov(NB, List, Hand, Pont).
 
-t(List, Pont) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], 
-                apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T2,T3] , !, validMov(NB, List, Hand, Pont), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true).
+t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], 
+                apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T2,T3] , !, validMov(NB, List, Hand), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true).
 
 t3(List, Pont) :- load, createBoard(2,2,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,1,1],[T2,1,2]], 
                 apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T3] , !, validMov(NB, List, Hand, Pont), ((List = [[tile(y,!),2,2],[tile(r,!),2,1]])->breakpoint; true).
