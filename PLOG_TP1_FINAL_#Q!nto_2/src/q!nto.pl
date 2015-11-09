@@ -324,8 +324,8 @@ choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-playOp(1) :- write('\33\[2J'), nl, write('      --- Player 1 turn! --- '), nl, createBoard(10,10,B), displayBoard(B), nl, 
-                        makeHand(18, [], Hand1), makeHand(18, [], Hand2),  game(B, 0, Hand1, Hand2), nl , displayBoard(Bnew), write('      --- Player 2 turn! ---').
+playOp(1) :- write('\33\[2J'), nl, createBoard(10,10,B), displayBoard(B), nl, 
+                        makeHand(18, [], Hand1), makeHand(18, [], Hand2),  game(B, 0, Hand1, Hand2), nl , displayBoard(Bnew).
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
