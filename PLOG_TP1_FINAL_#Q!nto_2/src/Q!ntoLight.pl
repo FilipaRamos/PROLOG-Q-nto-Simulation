@@ -116,7 +116,7 @@ createCenter(B, W, H, Hand, Bnew, NHand) :-  W1 is W/2, H1 is H/2, W2 is ceiling
 
 
 /*expand matrix*/
-
+matrix_width(Matrix, W) :- nth0(0, Matrix, Elem), length(Elem, W).
 empty_tile(tile(' ',' ')).
 expand_matrix_up(Matrix, [L|Matrix]) :- empty_tile( E ), matrix_width(Matrix, W), listElement(L, W, E).
 expand_matrix_down(Matrix, NewMatrix) :- empty_tile( E ), matrix_width(Matrix, W), listElement(L, W, E), append(Matrix, [L], NewMatrix).
@@ -355,13 +355,13 @@ test :- createBoard(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), dis
 randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] ,
                 apply_moves(B, L, Hand, NB), displayBoard(NB),  validMov(NB, List, Hand).
 */
-
+/*
 t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
                 apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, validMov(NB, List, Hand), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
 
 t4(Lis):- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]] , Hand = [T1,T2,T3],
                 apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, getAllValidMoves(B, Hand, Lis), diplay(Lis).
-
+*/
 /*
 t3(List, Pont) :- load, createBoard(2,2,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,1,1],[T2,1,2]], 
                 apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T3] , !, validMov(NB, List, Hand, Pont), ((List = [[tile(y,!),2,2],[tile(r,!),2,1]])->breakpoint; true).
