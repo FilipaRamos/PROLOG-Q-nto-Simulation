@@ -58,7 +58,7 @@ makeDeck(Deck) :- deckWithDuplicates(L1),  remvWildTiles(L1, L2),
                  
 /*Creating Hands - Mixing Deck and Dividing it in two hands*/
 
-mixingElemtsDeck(Deck, NewDeck) :- makeDeck(Deck), random_permutation(Deck, NewDeck).
+mixingElemtsDeck(Deck, NewDeck) :- random_permutation(Deck, NewDeck).
 
 div(L, A, B) :-
     append(A, B, L),
@@ -284,9 +284,9 @@ moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN TH
 
 numberTiles(L) :- write('How many tiles do you want to play? (1,2,3,4,5)'), read(Count), Count > 0, Count < 6, movement(Count, L), write('RIC!!!!!').
 
-movement(0, []).
-movement(N, [Move|L]) :- N > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py],
-                                    N1 is N-1, movement(N1, L).
+movement(0, _L).
+movement(Count, [Move|L]) :- Count > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py],
+                                    N1 is Count - 1, movement(N1, L).
 
 %//////////////////////////MENUS///////////////////////////////////////
 
@@ -321,8 +321,8 @@ choice(1) :- menuPlay.
 choice(2) :- abort.
 
 /* Play Options */
-playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck),
-                        creatingHand(Deck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew), game(Bnew, 1, Hand1, Hand2).
+playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew), game(Bnew, 1, Hand1, Hand2).
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
