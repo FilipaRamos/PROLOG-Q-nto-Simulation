@@ -336,8 +336,8 @@ state(Board, Hand1, Hand2, Deck).
 /* game loop */
 playMove(B, Hand, NewHand) :- displayBoard(B), nl,  numberTiles(L), validMov(B, L, Hand, _), apply_moves(B, L, Hand, NewHand, Bnew).
 
-game(Board,0, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand1), !, game(Board,1, Hand1, Hand2).
-game(Board,1, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand2), !, game(Board,0, Hand1, Hand2).
+game(Board,0, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand1, NewHand), !, game(Board,1, Hand1, Hand2).
+game(Board,1, Hand1, Hand2):- done(Board, Hand1), done(Board, Hand2), playMove(Board, Hand2, NewHand), !, game(Board,0, Hand1, Hand2).
 
 /*BOT*/
 bot :- load, createBoard(5,5,B), displayBoard(B), nl, makeHand(5, _L, H), get_best_move(B, H, L),  apply_moves(B, L, NB), displayBoard(NB).
