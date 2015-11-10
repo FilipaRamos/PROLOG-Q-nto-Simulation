@@ -111,7 +111,8 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 createBoard(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
 randomCentre(T, Hand) :- length(Hand,N), random(0, N, Num), nth0(Num, Hand, T).
-createCenter(B, W, H, Hand, Bnew) :-  W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T, Hand), move(B, H2, W2, T, Bnew).
+createCenter(B, W, H, Hand, Bnew, NHand) :-  W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T, Hand), move(B, H2, W2, T, Hand, Bnew, NHand).
+
 
 
 /*expand matrix*/
@@ -322,7 +323,7 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew), game(Bnew, 1, Hand1, Hand2).
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew, NHand), write('          ------ Player1! -----'), game(Bnew, 0, NHand, Hand2).
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
@@ -334,8 +335,8 @@ done(H) :- length(H, N), N =\= 0.
 
 playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L), validMov(B, L, Hand),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
-game(Board,0, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, game(NewBoard,1, NewHand, Hand2).
-game(Board,1, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, game(NewBoard,0, Hand1, NewHand).
+game(Board,0, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), game(NewBoard,1, NewHand, Hand2).
+game(Board,1, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), game(NewBoard,0, Hand1, NewHand).
 
 game(_,0,_,_,_,_):- nl, write('Player 1 Won!'), nl.
 game(_,1,_,_,_,_):- nl, write('Player 2 Won!'),nl.
