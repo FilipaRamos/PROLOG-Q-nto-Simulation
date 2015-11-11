@@ -210,18 +210,28 @@ verify_Up(B, Px, Py, LS, LC):- Px1 is Px - 1, verify_Up_aux(B, Px1, Py, LS, LC).
 inBounds(B, X, Y):- length(B, H), nth1(1, B, L), length(L, W),
                     between(1, H, X), between(1, W, Y).
 
-isEmpty(B, X, Y):- getTile(B, X, Y, Tile2), Tile2 = tile(' ', ' ').                  
+isEmpty(B, X, Y):- getTile(B, X, Y, Tile2), Tile2 = tile(' ', ' ').            
+
+verify_Vert(B, Px, Py, LS, LC) :-  verify_Up(B,  Px, Py, LS1, LC1), verify_Down(B, Px, Py, LS2, LC2), 
+                                    append(LS1, LS2, LS), append(LC1, LC2, LC).  
+
+verify_Hor(B, Px, Py, LS, LC) :- verify_Right(B, Px, Py, LS1, LC1), verify_Left(B, Px, Py, LS2, LC2),
+                                 append(LS1, LS2, LS), append(LC1, LC2, LC).
 
 valid(B, _T, _Px, _Py, Mc) :- Mc =:= 0, all_Empty_Board(B, 0), !.
-valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Up(B,  Px, Py, LS, LC),
+valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Vert(B, Px, Py, LS, LC), 
                             T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
                             !, all_same_or_different(LS3), all_same_or_different(LC3).
 
-/*valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Left(B,  Px, Py, LS, LC), verify_Right(B,  Px, Py, LS2, LC2),
-                            append(LC, LC2, LC1), append(LS, LS2, LS1),
-                            T = tile(C, S), append(LC1, [C], LC3), append(LS1, [S], LS3),
-                            all_same_or_different(LS3), all_same_or_different(LC3).*/
 
+valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Hor(B, Px, Py, LS, LC), 
+                            T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
+                            !, all_same_or_different(LS3), all_same_or_different(LC3).
+
+belong_toHand(Move, Hand) :- Move = [T, _Px, _Py], member(T, Hand).
+
+valid_ListMoves(_B, [_Move|_T], _Hand, _Mc).
+valid_ListMoves(B, [Move|T], Hand, Mc) :- Move = [T, Px, Py], belong_toHand(Move, Hand), valid(B,T,Px, Py, Mc), valid_ListMoves(B, T, Hand,  Mc).
 
 
 
@@ -427,8 +437,9 @@ test :- createBoard(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), dis
 
 
 randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'), T2 = tile(g,'!'), T3 = tile(r,'!'), L = [[T1,2,3],[T2,3,3]], Hand = [T1,T2,T3] ,
-                apply_moves(B, L, Hand, _NH, NB), displayBoard(NB),
-                !, valid(NB, T2, 4, 3, 1), displayBoard(NB), move(NB, 1, 3, T3, NNB), displayBoard(NNB).
+                /*apply_moves(B, L, Hand, _NH, NB), displayBoard(NB),*/
+                !, valid_ListMoves(B, L, Hand, 1), displayBoard(B), /*move(B,3, 4, T3, NB)*/ apply_moves(B, L, Hand, _NH, NB),
+                L1 = [[T3,3,4]], valid_ListMoves(NB, L1, Hand, 1),apply_moves(NB, L1, Hand, _NH1, NNB), displayBoard(NNB).
 
 /*
 t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
