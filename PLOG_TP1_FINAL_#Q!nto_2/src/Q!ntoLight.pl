@@ -111,7 +111,8 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
 createBoard(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
 
 randomCentre(T, Hand) :- length(Hand,N), random(0, N, Num), nth0(Num, Hand, T).
-createCenter(B, W, H, Hand, Bnew, NHand) :-  W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T, Hand), move(B, H2, W2, T, Hand, Bnew, NHand).
+createCenter(B, W, H, Hand, Bnew, NHand) :-  W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T, Hand),
+                                        move(B, H2, W2, T, Bnew), deleteElemHand(Hand, T, NHand).
 
 
 
@@ -158,13 +159,75 @@ apply_moves(B, [[T,X,Y]|TM], Hand, NewHand, NewBoard) :- move(B, X, Y, T, Hand, 
 apply_moves(NewBoard, [], NewBoard) :- !.
 apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), !, apply_moves(NB,TM, NewBoard).
 
+%///////////////////////////////////////////// NEW VALID MOVE ///////////////////////////////////////////////////////////
+
+empty_Tile(T) :- T1 = tile(' ', ' '), T == T1.
+not_empty_Tile(T, Deck) :- member(T, Deck). 
+
+verify_Line(_B, _Limite, _Line, _Count).
+verify_Line(B, Limite, Line, Count) :- Count < Limite, nth0(Count, B, Elem), empty_Tile(Elem), Count1 is Count + 1, verify_Line(B, Limite, Line, Count1).
+
+all_Empty_Board(_B, _CC).
+all_Empty_Board(B, CC) :- length(B, Altura), CC < Altura,  nth0(0, B, Elem), length(Elem, Largura), nth0(CC, B, Line),
+                          verify_Line(B, Largura, Line, 0), CC1 is CC+1, all_Empty_Board(B, CC1).
+
+verify_Left_aux(B, Px, Py, [S|LS], [C|LC]) :-  Py > 0, 
+                                        getTile(B, Px, Py, T), \+ empty_Tile( T), T = tile(C, S),
+                                        Py1 is Py - 1, verify_Left_aux(B, Px, Py1, LS, LC).
+verify_Left_aux(B, Px, Py, LS, LC) :- (Py =:= 0;(getTile(B, Px, Py, T),empty_Tile( T ))), LS = [], LC = [], !. 
+
+verify_Left(B, Px, Py, LS, LC):- Py1 is Py - 1, verify_Left_aux(B, Px, Py1, LS, LC).
+
+
+
+verify_Right_aux(B, Px, Py, [S|LS], [C|LC]) :- nth0(0, B, Elem), length(Elem, Largura), Py =< Largura, 
+                                        getTile(B, Px, Py, T), \+ empty_Tile( T), T = tile(C, S),
+                                        Py1 is Py + 1, verify_Right_aux(B, Px, Py1, LS, LC).
+verify_Right_aux(B, Px, Py, LS, LC) :- nth0(0, B, Elem), length(Elem, Largura), (Py =:= Largura+1;(getTile(B, Px, Py, T),empty_Tile( T ))), LS = [], LC = [], !. 
+       
+verify_Right(B, Px, Py, LS, LC):- Py1 is Py + 1, verify_Right_aux(B, Px, Py1, LS, LC).
+
+
+
+verify_Down_aux(B, Px, Py, [S|LS], [C|LC]) :- length(B, Altura), Py =< Altura, 
+                                        getTile(B, Px, Py, T), \+ empty_Tile( T), T = tile(C, S),
+                                        Px1 is Px + 1, verify_Down_aux(B, Px1, Py, LS, LC).
+verify_Down_aux(B, Px, Py, LS, LC) :- length(B, Altura), (Px =:= Altura+1;(getTile(B, Px, Py, T),empty_Tile( T ))), LS = [], LC = [], !. 
+       
+verify_Down(B, Px, Py, LS, LC):- Px1 is Px + 1, verify_Down_aux(B, Px1, Py, LS, LC).
+
+
+
+verify_Up_aux(B, Px, Py, [S|LS], [C|LC]) :-  Px > 0, 
+                                        getTile(B, Px, Py, T), \+ empty_Tile( T), T = tile(C, S),
+                                        Px1 is Px - 1, verify_Up_aux(B, Px1, Py, LS, LC).
+verify_Up_aux(B, Px, Py, LS, LC) :- (Px =:= 0;(getTile(B, Px, Py, T),empty_Tile( T ))), LS = [], LC = [], !. 
+
+verify_Up(B, Px, Py, LS, LC):- Px1 is Px - 1, verify_Up_aux(B, Px1, Py, LS, LC).
+
+
+
+inBounds(B, X, Y):- length(B, H), nth1(1, B, L), length(L, W),
+                    between(1, H, X), between(1, W, Y).
+
+isEmpty(B, X, Y):- getTile(B, X, Y, Tile2), Tile2 = tile(' ', ' ').                  
+
+valid(B, _T, _Px, _Py, Mc) :- Mc =:= 0, all_Empty_Board(B, 0), !.
+valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Up(B,  Px, Py, LS, LC),
+                            T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
+                            !, all_same_or_different(LS3), all_same_or_different(LC3).
+
+/*valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Left(B,  Px, Py, LS, LC), verify_Right(B,  Px, Py, LS2, LC2),
+                            append(LC, LC2, LC1), append(LS, LS2, LS1),
+                            T = tile(C, S), append(LC1, [C], LC3), append(LS1, [S], LS3),
+                            all_same_or_different(LS3), all_same_or_different(LC3).*/
+
+
+
 
 %///////////VALID-MOV//////////////////
 
-inBounds(B, X, Y):- length(B, H), nth1(1, B, L), length(L, W), 
-                   ((X > 0 , X =< H, Y > 0, Y =< W)).
 
-isEmpty(B, X, Y):- getTile(B, X, Y, Tile2), Tile2 = tile(' ', ' ').
 
 hasNeighbour(_B, _X, _Y, []):-!, fail.
 hasNeighbour(B, X, Y, [[Dx, Dy]|_Ds]):- X1 is X + Dx, Y1 is Y + Dy, inBounds(B, X1, Y1), \+isEmpty(B, X1, Y1), !.
@@ -250,13 +313,14 @@ all_same_or_different(L):- all_same( L ), !.
 all_same_or_different(L):- all_different( L ), !.
 all_different([]).
 all_different([H|T]):- \+member(H, T), all_different( T ).
+all_same([]).
 all_same([H|T]):- length(T,N), listElement(T, N, H).
                   
 
 
 %///////BOT2 - SMART//////////////
 
-/*calculates best Move the one that uses more tiles...*/
+/*calculates best Move, the one that uses more tiles...*/
 useMoreTiles([], _BestMove).
 useMoreTiles([BestH| BestT], BestMove) :-  length(BestH, N1), length(NewBest, N2), N1>N2, NewBest = BestH,
                                             useMoreTiles(BestT, BestMove).
@@ -275,6 +339,9 @@ subset(Len, [_|Tail], NTail):-  subset(Len, Tail, NTail).
 
 best_Mov(B, Hand, Best) :- validMov(B, Best, Hand).                                          
 
+playBotMov(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, best_Mov(B, Hand, Best),nl, 
+                                  diplay(Best), apply_moves(B, Best, Hand, NewHand, NewBoard), nl, diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+
 
 %///////////////////////////PLAYER1 VS PLAYER2//////////////////////////
 
@@ -283,11 +350,15 @@ moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN TH
                         read_line(X1), name(C, X1), color( C ), write('Shape: '), read_line(X2), name(S, X2), shape(S), write('Choose where to place it. Row? '),
                         read(Px), write('Column ?'), read(Py).
 
-numberTiles(L) :- write('How many tiles do you want to play? (1,2,3,4,5)'), read(Count), Count > 0, Count < 6, movement(Count, L), write('RIC!!!!!').
+numberTiles(L) :- write('How many tiles do you want to play? (1,2,3,4,5)'), read(Count), Count > 0, Count < 6, movement(Count, L).
 
 movement(0, _L).
 movement(Count, [Move|L]) :- Count > 0, moveTile(C, S, Px, Py), T = tile(C, S), Move = [T, Px, Py],
                                     N1 is Count - 1, movement(N1, L).
+
+playPlayerMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L), validMov(B, L, Hand),nl, 
+                                             diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+
 
 %//////////////////////////MENUS///////////////////////////////////////
 
@@ -323,7 +394,7 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew, NHand), write('          ------ Player1! -----'), game(Bnew, 0, NHand, Hand2).
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 5, 5, Hand1, Bnew, _NHand), write('          ------ Player1! -----'), game(Bnew, 1, Hand1, Hand2).
 playOp(2).
 playOp(3).
 playOp(4) :- menu.
@@ -333,13 +404,16 @@ playOp(5) :- abort.
 
 done(H) :- length(H, N), N =\= 0.
 
-playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L), validMov(B, L, Hand),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+%playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L), validMov(B, L, Hand),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
-game(Board,0, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), game(NewBoard,1, NewHand, Hand2).
-game(Board,1, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), game(NewBoard,0, Hand1, NewHand).
 
-game(_,0,_,_,_,_):- nl, write('Player 1 Won!'), nl.
-game(_,1,_,_,_,_):- nl, write('Player 2 Won!'),nl.
+playMove(B, Hand, NewHand, NewBoard) :- playBotMov(B, Hand, NewHand, NewBoard).
+
+game(Board,0, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player1! -----'), game(NewBoard,1, NewHand, Hand2).
+game(Board,1, Hand1, Hand2):- done(Hand1), done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player2! -----'), game(NewBoard,0, Hand1, NewHand).
+
+game(_,0,_,_,_,_):- nl, write('Player 2 Won!'), nl.
+game(_,1,_,_,_,_):- nl, write('Player 1 Won!'),nl.
 
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
@@ -351,10 +425,11 @@ diplay([H|T]) :- write(H), nl, diplay(T).
 
 test :- createBoard(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), displayBoard(NM).
 
-/*
-randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] ,
-                apply_moves(B, L, Hand, NB), displayBoard(NB),  validMov(NB, List, Hand).
-*/
+
+randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'), T2 = tile(g,'!'), T3 = tile(r,'!'), L = [[T1,2,3],[T2,3,3]], Hand = [T1,T2,T3] ,
+                apply_moves(B, L, Hand, _NH, NB), displayBoard(NB),
+                !, valid(NB, T2, 4, 3, 1), displayBoard(NB), move(NB, 1, 3, T3, NNB), displayBoard(NNB).
+
 /*
 t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
                 apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, validMov(NB, List, Hand), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
