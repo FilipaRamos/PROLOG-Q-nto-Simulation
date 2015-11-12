@@ -331,11 +331,6 @@ all_same([H|T]):- length(T,N), listElement(T, N, H).
 
 %///////BOT2 - SMART//////////////
 
-/*calculates best Move, the one that uses more tiles...*/
-useMoreTiles([], _BestMove).
-useMoreTiles([BestH| BestT], BestMove) :-  length(BestH, N1), length(NewBest, N2), N1>N2, NewBest = BestH,
-                                            useMoreTiles(BestT, BestMove).
-
 /*return the best Move the one that uses more tiles...*/
 
 evaluateMov(N, Lista) :- length(Lista, N).
@@ -349,6 +344,7 @@ subset(Len, [E|Tail], [E|NTail]):-   PLen is Len - 1,  (PLen > 0 -> subset(PLen,
 subset(Len, [_|Tail], NTail):-  subset(Len, Tail, NTail).
 
 best_Mov(B, Hand, Best) :- validMov(B, Best, Hand).                                          
+
 
 playBotMov(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, best_Mov(B, Hand, Best),nl, 
                                   diplay(Best), apply_moves(B, Best, Hand, NewHand, NewBoard), nl, diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
@@ -407,7 +403,8 @@ choice(2) :- abort.
 playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
                         creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), game(B, 0, Hand1, Hand2).
 playOp(2).
-playOp(3).
+playOp(3) :-  write('\33\[2J'), nl, createBoard(60,60,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 60, 60, Hand1, Bnew, NHand1),  write('          ------ Player1! -----'), game(Bnew, 0, NHand1, Hand2).
 playOp(4) :- menu.
 playOp(5) :- abort.
 
@@ -415,7 +412,7 @@ playOp(5) :- abort.
 
 done([]).
 
-playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand, 1),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+%playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand, 1),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
 
 playMove(B, Hand, NewHand, NewBoard) :- playBotMov(B, Hand, NewHand, NewBoard).
