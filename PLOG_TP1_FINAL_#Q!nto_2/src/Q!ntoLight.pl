@@ -27,7 +27,7 @@ tile(' ',' ').
 tile(C, F) :- color(C), shape(F).
 
 
-%///////////////  DECK  ////////////////
+%//////////////////////////////////////////////////////////////  DECK  /////////////////////////////////////////////////////////////////////////
 
 
 /*Creating Deck*/
@@ -54,7 +54,7 @@ makeDeck(Deck) :- deckWithDuplicates(L1),  remvWildTiles(L1, L2),
                   ST1 = tile(r, s), ST2 = tile(g, s), ST3 = tile(b, s), ST4 = tile(y, s), ST5 = tile(c, s),
                   L = [CT1, CT2, CT3, CT4, CT5, ST1, ST2,ST3,ST4,ST5], append(L2, L, Deck).
 
-%///////////////  HAND  ////////////////
+%//////////////////////////////////////////////////////////////////////  HAND  ////////////////////////////////////////////////////////////////////////////////
                  
 /*Creating Hands - Mixing Deck and Dividing it in two hands*/
 
@@ -67,9 +67,6 @@ div(L, A, B) :-
 
 creatingHand(Deck, Hand1, Hand2) :- div(Deck, Hand1, Hand2).
 
-
-
-
 /* Display hand */
 
 displayHand([_HHand|_T], 5).
@@ -78,7 +75,7 @@ displayHand([HHand|T], CC) :- CC < 5, CC1 is CC+1, write(HHand), write('  '), di
 displayTile(C,S) :- write(C), write(S), write(' | ').
 
 
-%///////////BOARD - DISPLAY/////////////
+%///////////////////////////////////////////////////////////////////////BOARD - DISPLAY/////////////////////////////////////////////////////////////////////////
 
 writetile(tile(C,F)) :- write(' '), print(C), print(F), write(' ').
 /*  1   2    3  4 .... */
@@ -105,7 +102,7 @@ displayBoard([L1|R]) :-  length(L1,N1), nl,write('  '), fguideLine(N1, 0), nl,wr
                                                 displayBoardaux([L1|R],1),  write('  '), fHorizontalLine(N1), nl, write('  '), fguideLine(N1, 0), nl.
 
 
-%///////////BOARD - CREATION////////////
+%////////////////////////////////////////////////////////////////////BOARD - CREATION///////////////////////////////////////////////////////////////////////////
 
 /* Lista de Listas..Cria Board Matrix tudo com espaços vazios...*/
 createBoard(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,H,L). 
@@ -113,8 +110,6 @@ createBoard(W, H, Matrix) :- listElement(L,W,tile(' ',' ')), listElement(Matrix,
 randomCentre(T, Hand) :- length(Hand,N), random(0, N, Num), nth0(Num, Hand, T).
 createCenter(B, W, H, Hand, Bnew, NHand) :-  W1 is W/2, H1 is H/2, W2 is ceiling(W1), H2 is ceiling(H1), randomCentre(T, Hand),
                                         move(B, H2, W2, T, Bnew), deleteElemHand(Hand, T, NHand).
-
-
 
 /*expand matrix*/
 matrix_width(Matrix, W) :- nth0(0, Matrix, Elem), length(Elem, W).
@@ -136,10 +131,8 @@ expand_matrix_5left(CC, M, NM) :- CC < 5, CC > 0, expand_matrix_left(M, NM),CC1 
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
-%//////////////////MOVEMENT FUNCTIONS//////////////////
+%//////////////////////////////////////////////////////////////////////MOVEMENT FUNCTIONS////////////////////////////////////////////////////////////
 
-%deleteElemHand(Hand, Tile, NewHand) :- delete(Hand,Tile,NewHand1), length(NewHand1,TamanhoDepois), length(Hand,TamanhoAntes), TamanhoAntes-TamanhoDepois=:=2,append(NewHand1, Tile, NewHand).
-%deleteElemHand(Hand, Tile, _NewHand) :- delete(Hand,Tile, _NewHand1).
 deleteElemHand(Hand, Tile, NewHand):-select(Tile, Hand, NewHand), !.
 deleteElemHand(Hand, _Tile, Hand).
 /*REPLACES AN ELEMNT */
@@ -160,7 +153,7 @@ apply_moves(B, [[T,X,Y]|TM], Hand, NewHand, NewBoard) :- move(B, X, Y, T, Hand, 
 apply_moves(NewBoard, [], NewBoard) :- !.
 apply_moves(B, [[T,X,Y]|TM], NewBoard) :- move(B, X, Y, T, NB), !, apply_moves(NB,TM, NewBoard).
 
-%///////////////////////////////////////////// NEW VALID MOVE ///////////////////////////////////////////////////////////
+%///////////////////////////////////////////////////////////////////////////// NEW VALID MOVE /////////////////////////////////////////////////////////////////////
 
 empty_Tile(T) :- T1 = tile(' ', ' '), T == T1.
 not_empty_Tile(T, Deck) :- member(T, Deck). 
@@ -236,9 +229,7 @@ valid_ListMoves(B, [Move|T], Hand, Mc) :- Move = [T, Px, Py], belong_toHand(Move
 
 
 
-%///////////VALID-MOV//////////////////
-
-
+%//////////////////////////////////////////////////////////////////////////VALID-MOV/////////////////////////////////////////////////////////////////////////////
 
 hasNeighbour(_B, _X, _Y, []):-!, fail.
 hasNeighbour(B, X, Y, [[Dx, Dy]|_Ds]):- X1 is X + Dx, Y1 is Y + Dy, inBounds(B, X1, Y1), \+isEmpty(B, X1, Y1), !.
@@ -327,9 +318,10 @@ all_different([H|T]):- \+member(H, T), all_different( T ).
 all_same([]).
 all_same([H|T]):- length(T,N), listElement(T, N, H).
                   
+%////////////////////////////////////////////////////////////////BOT1 - RANDOM /////////////////////////////////////////////////////////////////////////
 
 
-%///////BOT2 - SMART//////////////
+%////////////////////////////////////////////////////////////////BOT2 - SMART/////////////////////////////////////////////////////////////////////////
 
 /*return the best Move the one that uses more tiles...*/
 
@@ -345,12 +337,7 @@ subset(Len, [_|Tail], NTail):-  subset(Len, Tail, NTail).
 
 best_Mov(B, Hand, Best) :- validMov(B, Best, Hand).                                          
 
-
-playBotMov(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, best_Mov(B, Hand, Best),nl, 
-                                  diplay(Best), apply_moves(B, Best, Hand, NewHand, NewBoard), nl, diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
-
-
-%///////////////////////////PLAYER1 VS PLAYER2//////////////////////////
+%/////////////////////////////////////////////////////////////////////////PLAYER1 VS PLAYER2///////////////////////////////////////////////////////////////////
 
 /*ASKS COLER, LETTER, POSITION IN ORDER TO MOVE TILE... */
 moveTile(C, S, Px, Py) :- write('Choose the tile to play. DO NOT PUT A DOT IN THE END!!!! Color: '),read_line(_),
@@ -367,7 +354,7 @@ playPlayerMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(H
                                              diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
 
-%//////////////////////////MENUS///////////////////////////////////////
+%/////////////////////////////////////////////////////////////////////////////MENUS/////////////////////////////////////////////////////////////////////////
 
 /* menu */
 logo :- write('           ________________________'), nl,
@@ -401,10 +388,14 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), game(B, 0, Hand1, Hand2).
-playOp(2).
+                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), game(B, 0, Hand1, Hand2, 0, 0).
+
+playOp(2) :- write('\33\[2J'), nl, createBoard(5,5,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
+                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), gameHBot(B, 0, Hand1, Hand2, 0, 0).
+
+
 playOp(3) :-  write('\33\[2J'), nl, createBoard(60,60,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 60, 60, Hand1, Bnew, NHand1),  write('          ------ Player1! -----'), game(Bnew, 0, NHand1, Hand2).
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 60, 60, Hand1, Bnew, NHand1),  write('          ------ Player1! -----'), gameBot(Bnew, 0, NHand1, Hand2, 0, 1).
 playOp(4) :- menu.
 playOp(5) :- abort.
 
@@ -412,16 +403,27 @@ playOp(5) :- abort.
 
 done([]).
 
-%playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand, 1),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand, 1),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
 
-playMove(B, Hand, NewHand, NewBoard) :- playBotMov(B, Hand, NewHand, NewBoard).
+playBotMov(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, best_Mov(B, Hand, Best),nl, 
+                                  diplay(Best), apply_moves(B, Best, Hand, NewHand, NewBoard), nl, diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
 
-game(Board,0, Hand1, Hand2):- \+done(Hand1), \+done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), game(NewBoard,1, NewHand, Hand2), print('sdds').
-game(Board,1, Hand1, Hand2):- \+done(Hand1), \+done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), game(NewBoard,0, Hand1, NewHand).
+game(Board,0, Hand1, Hand2, 0, 0):- \+done(Hand1), \+done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), game(NewBoard,1, NewHand, Hand2, 1, 0), print('sdds').
+game(Board,1, Hand1, Hand2, 1, 0):- \+done(Hand1), \+done(Hand2), playMove(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), game(NewBoard,0, Hand1, NewHand, 0, 0).
 
-game(_,0,_,_,_,_):- nl, write('Player 1 Won!'), nl.
-game(_,1,_,_,_,_):- nl, write('Player 2 Won!'),nl.
+
+gameBot(Board,0, Hand1, Hand2, 0, 1):- \+done(Hand1), \+done(Hand2), playBotMov(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), gameBot(NewBoard,1, NewHand, Hand2, 1, 1), print('sdds').
+gameBot(Board,1, Hand1, Hand2, 1, 1):- \+done(Hand1), \+done(Hand2), playBotMov(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), gameBot(NewBoard,0, Hand1, NewHand, 0, 1).
+
+gameHBot(Board,0, Hand1, Hand2, 0, 0):- \+done(Hand1), \+done(Hand2), playMove(Board, Hand1, NewHand, NewBoard), !, write('        ------ Player2! -----'), gameHBot(NewBoard,1, NewHand, Hand2, 1, 0), print('sdds').
+gameHBot(Board,1, Hand1, Hand2, 1, 0):- \+done(Hand1), \+done(Hand2), playBotMov(Board, Hand2, NewHand, NewBoard), !, write('        ------ Player1! -----'), gameHBot(NewBoard,0, Hand1, NewHand, 0, 0).
+
+
+game(_,0,_,_,_,_,_,_):- nl, write('Player 1 Won!'), nl.
+game(_,1,_,_,_,_,_,_):- nl, write('Player 2 Won!'),nl.
+game(_,_,_,_,_,_,0,_):- nl, write('Bot 1 Won!'), nl.
+game(_,_,_,_,_,_,_,1):- nl, write('Bot 2 Won!'),nl.
 
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
@@ -439,14 +441,14 @@ randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'), T2 = tile(g,'!'), T3 
                 !, valid_ListMoves(B, L, Hand, 1), displayBoard(B), /*move(B,3, 4, T3, NB)*/ apply_moves(B, L, Hand, _NH, NB),
                 L1 = [[T3,3,4]], valid_ListMoves(NB, L1, Hand, 1),apply_moves(NB, L1, Hand, _NH1, NNB), displayBoard(NNB).
 
-t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
-                apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, valid_ListMoves(NB, List, Hand,1). 
+t5(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
+                apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, valid_ListMoves(NB, List, Hand,1), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
 
 
-/*
+
 t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
                 apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, validMov(NB, List, Hand), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
-
+/*
 t4(Lis):- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]] , Hand = [T1,T2,T3],
                 apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, getAllValidMoves(B, Hand, Lis), diplay(Lis).
 */
