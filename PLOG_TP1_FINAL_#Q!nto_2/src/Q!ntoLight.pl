@@ -212,20 +212,20 @@ verify_Vert(B, Px, Py, LS, LC) :-  verify_Up(B,  Px, Py, LS1, LC1), verify_Down(
 verify_Hor(B, Px, Py, LS, LC) :- verify_Right(B, Px, Py, LS1, LC1), verify_Left(B, Px, Py, LS2, LC2),
                                  append(LS1, LS2, LS), append(LC1, LC2, LC).
 
-valid(B, _T, _Px, _Py, Mc) :- Mc =:= 0, all_Empty_Board(B, 0), !.
-valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Vert(B, Px, Py, LS, LC), 
+valid(B, _T, _Px, _Py) :- all_Empty_Board(B, 0), !.
+valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Vert(B, Px, Py, LS, LC), 
                             T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
                             !, all_same_or_different(LS3), all_same_or_different(LC3).
 
 
-valid(B, T, Px, Py, _Mc) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Hor(B, Px, Py, LS, LC), 
+valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Hor(B, Px, Py, LS, LC), 
                             T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
                             !, all_same_or_different(LS3), all_same_or_different(LC3).
 
 belong_toHand(Move, Hand) :- Move = [T, _Px, _Py], member(T, Hand).
 
-valid_ListMoves(_B, [_Move|_T], _Hand, _Mc).
-valid_ListMoves(B, [Move|T], Hand, Mc) :- Move = [T, Px, Py], belong_toHand(Move, Hand), valid(B,T,Px, Py, Mc), valid_ListMoves(B, T, Hand,  Mc).
+valid_ListMoves(_B, [_Move|_T], _Hand).
+valid_ListMoves(B, [Move|T], Hand) :- Move = [T, Px, Py], belong_toHand(Move, Hand), valid(B,T,Px, Py), valid_ListMoves(B, T, Hand).
 
 
 
@@ -333,7 +333,14 @@ subl(List, Sub):- length(List, N), subl_aux(N, List, Sub).
 subset(Len, [E|Tail], [E|NTail]):-   PLen is Len - 1,  (PLen > 0 -> subset(PLen, Tail, NTail) ; NTail=[]).
 subset(Len, [_|Tail], NTail):-  subset(Len, Tail, NTail).
 
-best_Mov(B, Hand, Best) :- validMov(B, Best, Hand).                                          
+best_Mov(B, Hand, Best) :- validMov(B, Best, Hand).  
+
+
+/*TENTATIVA DE BOT RANDOM...*/
+random_bot_Mov(_B, _Hand, _ListBest, 10).
+random_bot_Mov(B, Hand, [Best|L], CC) :- CC > 0, CC < 10, validMov(B, Best, Hand), CC1 is CC+1,  random_bot_Mov(B, Hand, L, CC1).                                       
+
+aplly_random_Bot(B, Hand, Best) :- random(1,10, Num), random_bot_Mov(B, Hand, ListBest, 1), nth0(Num, ListBest, Best). 
 
 %/////////////////////////////////////////////////////////////////////////PLAYER1 VS PLAYER2///////////////////////////////////////////////////////////////////
 
@@ -349,7 +356,7 @@ movement(Count, [Move|L]) :- Count > 0, moveTile(C, S, Px, Py), T = tile(C, S), 
                                     N1 is Count - 1, movement(N1, L).
 
 playPlayerMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L), validMov(B, L, Hand),nl, 
-                                             diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+                                             apply_moves(B, L, Hand, NewHand, NewBoard),nl, displayBoard(NewBoard), nl, nl.
 
 
 %/////////////////////////////////////////////////////////////////////////////MENUS/////////////////////////////////////////////////////////////////////////
@@ -386,14 +393,14 @@ choice(2) :- abort.
 
 /* Play Options */
 playOp(1) :- write('\33\[2J'), nl, createBoard(3,3,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), game(B, 0, Hand1, Hand2, 0, 0).
+                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), nl, game(B, 0, Hand1, Hand2, 0, 0).
 
 playOp(2) :- write('\33\[2J'), nl, createBoard(3,3,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), gameHBot(B, 0, Hand1, Hand2, 0, 0).
+                        creatingHand(NewDeck, Hand1, Hand2), write('          ------ Player1! -----'), nl, gameHBot(B, 0, Hand1, Hand2, 0, 0).
 
 
 playOp(3) :-  write('\33\[2J'), nl, createBoard(3,3,B), makeDeck(Deck), mixingElemtsDeck(Deck, NewDeck),
-                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 3, 3, Hand1, Bnew, NHand1),  write('          ------ Player1! -----'), gameBot(Bnew, 0, NHand1, Hand2, 0, 1).
+                        creatingHand(NewDeck, Hand1, Hand2), createCenter(B, 3, 3, Hand1, Bnew, NHand1),  write('          ------ Player1! -----'),nl, gameBot(Bnew, 0, NHand1, Hand2, 0, 1).
 
 playOp(4) :- menu.
 playOp(5) :- abort.
@@ -402,34 +409,34 @@ playOp(5) :- abort.
 
 done([]).
 
-playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand, 1),nl, diplay(L), apply_moves(B, L, Hand, NewHand, NewBoard),nl,diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+playMove(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, numberTiles(L),valid_ListMoves(B, L, Hand),nl, apply_moves(B, L, Hand, NewHand, NewBoard),nl, displayBoard(NewBoard), nl, nl.
 
 
 playBotMov(B, Hand, NewHand, NewBoard) :- displayBoard(B), nl, displayHand(Hand,0), nl, best_Mov(B, Hand, Best),nl, 
-                                  diplay(Best), apply_moves(B, Best, Hand, NewHand, NewBoard), nl, diplay(L), displayBoard(NewBoard), nl, nl, diplay(L).
+                                   apply_moves(B, Best, Hand, NewHand, NewBoard), nl, displayBoard(NewBoard), nl, nl.
 
 game(Board,0, Hand1, Hand2, 0, 0):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB), expand_matrix_down(NB, NNB), 
                                      expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB), playMove(NNNNB, Hand1, NewHand, NewBoard),
-                                     !, write('        ------ Player2! -----'), game(NewBoard,1, NewHand, Hand2, 1, 0).
+                                     !, write('        ------ Player2! -----'), nl, game(NewBoard,1, NewHand, Hand2, 1, 0).
 
 game(Board,1, Hand1, Hand2, 1, 0):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB),expand_matrix_down(NB, NNB), 
                                      expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB) , playMove(NNNNB, Hand2, NewHand, NewBoard),
-                                     !, write('        ------ Player1! -----'), game(NewBoard,0, Hand1, NewHand, 0, 0).
+                                     !, write('        ------ Player1! -----'), nl, game(NewBoard,0, Hand1, NewHand, 0, 0).
 
 
 gameBot(Board,0, Hand1, Hand2, 0, 1):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB), expand_matrix_down(NB, NNB), 
                                         expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB),playBotMov(NNNNB, Hand1, NewHand, NewBoard), 
-                                        !, write('        ------ Player2! -----'), gameBot(NewBoard,1, NewHand, Hand2, 1, 1).
+                                        !, write('        ------ Player2! -----'), nl, gameBot(NewBoard,1, NewHand, Hand2, 1, 1).
 gameBot(Board,1, Hand1, Hand2, 1, 1):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB), expand_matrix_down(NB, NNB), 
                                         expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB), playBotMov(NNNNB, Hand2, NewHand, NewBoard),
-                                         !, write('        ------ Player1! -----'), gameBot(NewBoard,0, Hand1, NewHand, 0, 1).
+                                         !, write('        ------ Player1! -----'), nl, gameBot(NewBoard,0, Hand1, NewHand, 0, 1).
 
 gameHBot(Board,0, Hand1, Hand2, 0, 0):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB), expand_matrix_down(NB, NNB), 
                                         expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB), playMove(NNNNB, Hand1, NewHand, NewBoard), 
-                                        !, write('        ------ Player2! -----'), gameHBot(NewBoard,1, NewHand, Hand2, 1, 0), print('sdds').
+                                        !, write('        ------ Player2! -----'), nl, gameHBot(NewBoard,1, NewHand, Hand2, 1, 0), print('sdds').
 gameHBot(Board,1, Hand1, Hand2, 1, 0):- \+done(Hand1), \+done(Hand2), expand_matrix_up(Board, NB), expand_matrix_down(NB, NNB), 
                                         expand_matrix_left(NNB, NNNB), expand_matrix_right(NNNB, NNNNB), playBotMov(NNNNB, Hand2, NewHand, NewBoard), 
-                                        !, write('        ------ Player1! -----'), gameHBot(NewBoard,0, Hand1, NewHand, 0, 0).
+                                        !, write('        ------ Player1! -----'), nl, gameHBot(NewBoard,0, Hand1, NewHand, 0, 0).
 
 
 game(_,0,_,_,_,_,_,_):- nl, write('Player 1 Won!'), nl.
