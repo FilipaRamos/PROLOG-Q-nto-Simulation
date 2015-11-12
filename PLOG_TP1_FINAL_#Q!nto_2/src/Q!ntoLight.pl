@@ -318,8 +318,6 @@ all_different([H|T]):- \+member(H, T), all_different( T ).
 all_same([]).
 all_same([H|T]):- length(T,N), listElement(T, N, H).
                   
-%////////////////////////////////////////////////////////////////BOT1 - RANDOM /////////////////////////////////////////////////////////////////////////
-
 
 %////////////////////////////////////////////////////////////////BOT2 - SMART/////////////////////////////////////////////////////////////////////////
 
@@ -441,38 +439,3 @@ game(_,_,_,_,_,_,_,1):- nl, write('Bot 2 Won!'),nl.
 
 /* Load librarys */
 load :- use_module(library(random)), use_module(library(lists)).
-
-/*FUNCOES DE TESTE*/
-
-diplay([]).
-diplay([H|T]) :- write(H), nl, diplay(T).
-
-test :- createBoard(5,5, M), displayBoard(M), expand_matrix_5left(1, M, NM), displayBoard(NM).
-
-
-randomBoard :- load, createBoard(5,5,B), T1 = tile(y,'!'), T2 = tile(g,'!'), T3 = tile(r,'!'), L = [[T1,2,3],[T2,3,3]], Hand = [T1,T2,T3] ,
-                !, valid_ListMoves(B, L, Hand, 1), displayBoard(B), apply_moves(B, L, Hand, _NH, NB),
-                L1 = [[T3,3,4]], valid_ListMoves(NB, L1, Hand, 1),apply_moves(NB, L1, Hand, _NH1, NNB), displayBoard(NNB).
-
-t5(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
-                apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, valid_ListMoves(NB, List, Hand,1), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
-
-
-
-t(List) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], Hand = [T1,T2,T3] , 
-                apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, validMov(NB, List, Hand), ((List = [[tile(y,!),4,4],[tile(g,!),4,5],[tile(r,!),4,3]])->breakpoint; true). 
-/*
-t4(Lis):- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]] , Hand = [T1,T2,T3],
-                apply_moves(B, L, Hand, NB, _NewHand), displayBoard(NB), !, getAllValidMoves(B, Hand, Lis), diplay(Lis).
-*/
-/*
-t3(List, Pont) :- load, createBoard(2,2,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,1,1],[T2,1,2]], 
-                apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T3] , !, validMov(NB, List, Hand, Pont), ((List = [[tile(y,!),2,2],[tile(r,!),2,1]])->breakpoint; true).
-
-
-t2(List, Pont) :- load, createBoard(5,5,B), T1 = tile(y,'!'),T2 = tile(g,'!'),T3 = tile(r,'!'), L = [[T1,3,4],[T2,2,4], [T3, 1,4]], 
-                apply_moves(B, L, NB), displayBoard(NB), Hand = [T1,T2,T3] , !, validPosition(NB, 1, 1).
-
-
-
-*/
