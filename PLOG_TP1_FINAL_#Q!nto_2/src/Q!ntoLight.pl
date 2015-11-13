@@ -124,10 +124,6 @@ listElement([],0, _X).
 listElement([X|Xs], N, X) :- N1 is N - 1,  listElement(Xs, N1, X).
 
 
-/*Expand 5 tiles in each direction*/
-expand_matrix_5left(5, _NM, _NM1).
-expand_matrix_5left(CC, M, NM) :- CC < 5, CC > 0, expand_matrix_left(M, NM),CC1 is CC+1, expand_matrix_5left(CC1, NM, _NM1).
-
 /* Get Tiles from the board */
 getTile(B, Px, Py, T) :- nth1(Px, B, L), nth1(Py, L, T).
 
@@ -212,13 +208,19 @@ verify_Vert(B, Px, Py, LS, LC) :-  verify_Up(B,  Px, Py, LS1, LC1), verify_Down(
 verify_Hor(B, Px, Py, LS, LC) :- verify_Right(B, Px, Py, LS1, LC1), verify_Left(B, Px, Py, LS2, LC2),
                                  append(LS1, LS2, LS), append(LC1, LC2, LC).
 
+
+hasNeighbour(_B, _X, _Y, []):-!, fail.
+hasNeighbour(B, X, Y, [[Dx, Dy]|_Ds]):- X1 is X + Dx, Y1 is Y + Dy, inBounds(B, X1, Y1), \+isEmpty(B, X1, Y1), !.
+hasNeighbour(B, X, Y, [[_Dx, _Dy]|Ds]):- hasNeighbour(B, X, Y, Ds).
+
+
 valid(B, _T, _Px, _Py) :- all_Empty_Board(B, 0), !.
-valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Vert(B, Px, Py, LS, LC), 
+valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), L = [[1,0],[0,1],[-1,0],[0,-1]], hasNeighbour(B, Px, Py, L), verify_Vert(B, Px, Py, LS, LC), 
                             T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
                             !, all_same_or_different(LS3), all_same_or_different(LC3).
 
 
-valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), verify_Hor(B, Px, Py, LS, LC), 
+valid(B, T, Px, Py) :- inBounds(B, Px, Py), isEmpty(B, Px, Py), L = [[1,0],[0,1],[-1,0],[0,-1]], hasNeighbour(B, Px, Py, L), verify_Hor(B, Px, Py, LS, LC), 
                             T = tile(C, S), append(LC, [C], LC3), append(LS, [S], LS3),
                             !, all_same_or_different(LS3), all_same_or_different(LC3).
 
@@ -231,9 +233,6 @@ valid_ListMoves(B, [Move|T], Hand) :- Move = [T, Px, Py], belong_toHand(Move, Ha
 
 %//////////////////////////////////////////////////////////////////////////VALID-MOV/////////////////////////////////////////////////////////////////////////////
 
-hasNeighbour(_B, _X, _Y, []):-!, fail.
-hasNeighbour(B, X, Y, [[Dx, Dy]|_Ds]):- X1 is X + Dx, Y1 is Y + Dy, inBounds(B, X1, Y1), \+isEmpty(B, X1, Y1), !.
-hasNeighbour(B, X, Y, [[_Dx, _Dy]|Ds]):- hasNeighbour(B, X, Y, Ds).
 
 validPositions(_, []).
 validPositions(B, [FirstMove|OtherMoves]):- FirstMove =[_Tile, X, Y], validPosition(B, X, Y), apply_moves(B, [FirstMove], NewB), validPositions(NewB, OtherMoves).
